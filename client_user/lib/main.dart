@@ -36,7 +36,7 @@ import 'package:client_user/data/dataSources/register_api_data.dart';
 import 'package:client_user/data/dataSources/resend_otp_email_forgot_password_api_data.dart';
 import 'package:client_user/data/dataSources/resend_otp_email_register_api_data.dart';
 import 'package:client_user/data/dataSources/reset_password_api_data.dart';
-import 'package:client_user/data/dataSources/send_Review_api_data.dart';
+import 'package:client_user/data/dataSources/send_review_api_data.dart';
 import 'package:client_user/data/dataSources/send_message_api_data.dart';
 import 'package:client_user/data/dataSources/send_report_api_data.dart';
 import 'package:client_user/data/dataSources/update_customer_api_data.dart';
@@ -208,8 +208,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(
             create: (context) => SendMessageBloc(SendMessageAPIData())),
         BlocProvider(create: (context) => SendReportBloc(SendReportAPIData())),
-         BlocProvider(
-            create: (context) => SendReviewBloc(SendReviewAPIData())),
+        BlocProvider(create: (context) => SendReviewBloc(SendReviewAPIData())),
         BlocProvider(
             create: (context) => GetHistoryOrderBloc(GetHistoryOrderAPIData()))
       ],
