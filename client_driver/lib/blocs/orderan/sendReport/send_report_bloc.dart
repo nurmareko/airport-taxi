@@ -1,6 +1,5 @@
 import 'package:airport_taxi_sharing_driver_client/data/dataSources/send_report_api_data.dart';
 import 'package:airport_taxi_sharing_driver_client/data/models/request/send_report_request_model.dart';
-import 'package:airport_taxi_sharing_driver_client/data/models/response/send_message_response_model.dart';
 import 'package:airport_taxi_sharing_driver_client/data/models/response/send_report_response_model.dart';
 import 'package:airport_taxi_sharing_driver_client/error/new-exception.dart';
 import 'package:bloc/bloc.dart';

@@ -4,7 +4,6 @@ import 'package:airport_taxi_sharing_driver_client/screens/dasboard/account/acco
 import 'package:airport_taxi_sharing_driver_client/screens/dasboard/beranda_screen.dart';
 import 'package:airport_taxi_sharing_driver_client/screens/dasboard/history/history_template.dart';
 import 'package:airport_taxi_sharing_driver_client/screens/dasboard/orderan/orderan_screen.dart';
-import 'package:airport_taxi_sharing_driver_client/screens/dasboard/ride/history_ride.dart';
 import 'package:airport_taxi_sharing_driver_client/screens/dasboard/ride/ride_screen.dart';
 import 'package:airport_taxi_sharing_driver_client/theme/colors.dart';
 import 'package:flutter/material.dart';

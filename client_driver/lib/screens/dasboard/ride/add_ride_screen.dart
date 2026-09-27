@@ -349,7 +349,7 @@ class _AddRideState extends State<AddRide> {
         } else {
           // Jika tidak ada alamat ditemukan
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Alamat tidak ditemukan')),
+            const SnackBar(content: const Text('Alamat tidak ditemukan')),
           );
         }
 

@@ -113,7 +113,7 @@ class _RideState extends State<Ride> {
       (_) => getCurrentLocation().then((currentLocation) {
         _currentP = currentLocation;
         print(
-            "ini lho selected p nya :L ${_selectedP}, ini current p nya : ${_currentP}");
+            "ini lho selected p nya :L $_selectedP, ini current p nya : $_currentP");
         if (_selectedP != null) {
           getPolylinePoints(_currentP!, _selectedP!).then((coordinates) {
             generatePolyLineFromPoints(coordinates);
@@ -766,7 +766,7 @@ class _RideState extends State<Ride> {
                           radius: pickupRadius.toDouble(),
                           strokeColor: Colors.blue,
                           strokeWidth: 1,
-                          fillColor: Colors.blue.withOpacity(0.1),
+                          fillColor: Colors.blue.withValues(alpha: 0.1),
                         ),
                       },
                       rotateGesturesEnabled: true,

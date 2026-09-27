@@ -335,7 +335,7 @@ class _BerandaState extends State<Beranda> {
               borderRadius: BorderRadius.circular(20.0),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.1),
                   spreadRadius: 3,
                   blurRadius: 6,
                   offset: const Offset(0, 3),
@@ -387,7 +387,7 @@ class _BerandaState extends State<Beranda> {
                     circleId: CircleId(tuple.item1.toString()),
                     center: tuple.item1,
                     radius: tuple.item2,
-                    fillColor: Colors.blue.withOpacity(0.1),
+                    fillColor: Colors.blue.withValues(alpha: 0.1),
                     strokeColor: Colors.blue,
                     strokeWidth: 1,
                   );
@@ -403,7 +403,7 @@ class _BerandaState extends State<Beranda> {
               borderRadius: BorderRadius.circular(20.0),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.1),
                   spreadRadius: 3,
                   blurRadius: 6,
                   offset: const Offset(0, 3),
@@ -455,7 +455,7 @@ class _BerandaState extends State<Beranda> {
             borderRadius: BorderRadius.circular(10),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.black.withValues(alpha: 0.1),
                 spreadRadius: 3,
                 blurRadius: 6,
                 offset: const Offset(0, 3),
@@ -496,7 +496,7 @@ class _BerandaState extends State<Beranda> {
         color: const Color(0xFF1E282C),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             spreadRadius: 3,
             blurRadius: 6,
             offset: const Offset(0, 3),

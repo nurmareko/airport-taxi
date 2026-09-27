@@ -9,7 +9,7 @@ class LoadingModal extends StatelessWidget {
     return Container(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
-      color: Colors.black.withOpacity(0.4),
+      color: Colors.black.withValues(alpha: 0.4),
       child: Center(
         child: Lottie.asset(
           'lottie/loading3.json',

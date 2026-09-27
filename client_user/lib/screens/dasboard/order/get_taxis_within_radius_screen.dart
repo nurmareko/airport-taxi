@@ -496,7 +496,7 @@ class _GetTaxisWithinRadiusState extends State<GetTaxisWithinRadius> {
                                                 Navigator.pop(context);
                                                 final addOrderRequestModel =
                                                     AddOrderRequestModel(
-                                                        rideId: "${ride.id}",
+                                                        rideId: ride.id,
                                                         latitude: latitude,
                                                         longitude: longitude);
 

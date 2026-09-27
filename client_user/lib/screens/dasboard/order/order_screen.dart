@@ -592,13 +592,12 @@ class _OrderState extends State<Order> {
 
     Set<Marker> markers = {
       Marker(
-        markerId: const MarkerId('orderLocation'),
-        position: LatLng(customerOrderLat, customerOrderLong),
-        infoWindow: const InfoWindow(
-          title: 'Lokasi Penjemputan',
-        ),
-        icon: markerIconCustomer
-      ),
+          markerId: const MarkerId('orderLocation'),
+          position: LatLng(customerOrderLat, customerOrderLong),
+          infoWindow: const InfoWindow(
+            title: 'Lokasi Penjemputan',
+          ),
+          icon: markerIconCustomer),
       Marker(
         markerId: const MarkerId('rideLocation'),
         position: LatLng(rideLat, rideLong),
@@ -711,7 +710,7 @@ class _OrderState extends State<Order> {
                               radius: pickupRadius.toDouble(),
                               strokeColor: Colors.blue,
                               strokeWidth: 1,
-                              fillColor: Colors.blue.withOpacity(0.1),
+                              fillColor: Colors.blue.withValues(alpha: 0.1),
                             ),
                           },
                           polylines: snapshot.data!,

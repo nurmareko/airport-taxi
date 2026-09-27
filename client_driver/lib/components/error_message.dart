@@ -17,7 +17,7 @@ class ErrorWidgets {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
         border: Border.all(color: borderColor, width: 1.0),
-        color: backgroundColor.withOpacity(0.3),
+        color: backgroundColor.withValues(alpha: 0.3),
       ),
       child: Row(
         children: [

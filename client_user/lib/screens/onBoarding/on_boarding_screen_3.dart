@@ -86,7 +86,7 @@ class OnBoarding3 extends StatelessWidget {
               borderRadius: BorderRadius.circular(15.0.w),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
+                  color: Colors.grey.withValues(alpha: 0.5),
                   spreadRadius: 2.w,
                   blurRadius: 5.w,
                   offset: Offset(0.w, 3.h),
@@ -114,7 +114,7 @@ class OnBoarding3 extends StatelessWidget {
               borderRadius: BorderRadius.circular(20.w),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
+                  color: Colors.grey.withValues(alpha: 0.5),
                   spreadRadius: 2.w,
                   blurRadius: 5.w,
                   offset: Offset(0.w, 3.h),

@@ -105,7 +105,7 @@ class _FullMapState extends State<FullMap> {
         circleId: maps.CircleId(tuple.item1.toString()),
         center: tuple.item1,
         radius: tuple.item2,
-        fillColor: Colors.blue.withOpacity(0.1),
+        fillColor: Colors.blue.withValues(alpha: 0.1),
         strokeColor: Colors.blue,
         strokeWidth: 1,
       );

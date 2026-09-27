@@ -18,7 +18,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:uuid/uuid.dart';
 
 class AddDestination extends StatefulWidget {
-  const AddDestination({Key? key}) : super(key: key);
+  const AddDestination({super.key});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -603,7 +603,8 @@ class _AddDestinationState extends State<AddDestination> {
                                                   newPosition.longitude,
                                                 );
                                                 if (placemarks.isNotEmpty) {
-                                                  String locationName = "${placemarks[0].name}, ${placemarks[0].street}, ${placemarks[0].subLocality}, ${placemarks[0].locality}, ${placemarks[0].administrativeArea}, ${placemarks[0].postalCode}, ${placemarks[0].country}";
+                                                  String locationName =
+                                                      "${placemarks[0].name}, ${placemarks[0].street}, ${placemarks[0].subLocality}, ${placemarks[0].locality}, ${placemarks[0].administrativeArea}, ${placemarks[0].postalCode}, ${placemarks[0].country}";
 
                                                   // Mengupdate _selectedAddress setelah mendapatkan nama lokasi
                                                   setState(() {

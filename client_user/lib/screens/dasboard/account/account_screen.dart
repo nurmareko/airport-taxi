@@ -1,6 +1,4 @@
 import 'package:client_user/components/confirmation_bottom_sheet.dart';
-import 'package:client_user/components/dasboard/notification_bottom_sheet.dart';
-import 'package:client_user/main.dart';
 import 'package:client_user/screens/dasboard/account/change_password.dart';
 import 'package:client_user/screens/dasboard/dasboard_template_screen.dart';
 import 'package:client_user/screens/dasboard/errorScreen/error_screen.dart';
@@ -13,7 +11,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:client_user/screens/dasboard/account/edit_account_profile_screen.dart';
 import 'package:client_user/blocs/customer/logout/logout_bloc.dart';
 import 'package:get/get.dart';
-import 'package:firebase_messaging/firebase_messaging.dart'; // Add this import
+// Add this import
 
 class Account extends StatefulWidget {
   const Account({super.key});

@@ -15,7 +15,7 @@ class LoadingModalDataBackground extends StatelessWidget {
       color: const Color(0xFF121B22),
       child: ColorFiltered(
         colorFilter: ColorFilter.mode(
-          Colors.black.withOpacity(0.8),
+          Colors.black.withValues(alpha: 0.8),
           BlendMode.srcATop,
         ),
         child: Center(
