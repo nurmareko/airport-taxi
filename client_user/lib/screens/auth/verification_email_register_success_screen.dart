@@ -1,5 +1,5 @@
-import 'package:airport_taxi_sharing_user_client/screens/auth/login_screen.dart';
-import 'package:airport_taxi_sharing_user_client/theme/colors.dart';
+import 'package:client_user/screens/auth/login_screen.dart';
+import 'package:client_user/theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 

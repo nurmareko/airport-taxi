@@ -2,14 +2,14 @@
 
 import 'dart:async';
 import 'dart:ui' as ui;
-import 'package:airport_taxi_sharing_user_client/blocs/customer/updateTokenDevice/update_device_token_bloc.dart';
-import 'package:airport_taxi_sharing_user_client/data/models/request/update_device_token_request_model.dart';
-import 'package:airport_taxi_sharing_user_client/screens/dasboard/beranda/add_destination_location_screen.dart';
-import 'package:airport_taxi_sharing_user_client/screens/dasboard/dasboard_template_screen.dart';
-import 'package:airport_taxi_sharing_user_client/screens/dasboard/errorScreen/error_screen.dart';
-import 'package:airport_taxi_sharing_user_client/screens/dasboard/errorScreen/location_error_screen.dart';
-import 'package:airport_taxi_sharing_user_client/screens/dasboard/beranda/fulll_map_screen.dart';
-import 'package:airport_taxi_sharing_user_client/utils/secure_storage.dart';
+import 'package:client_user/blocs/customer/updateTokenDevice/update_device_token_bloc.dart';
+import 'package:client_user/data/models/request/update_device_token_request_model.dart';
+import 'package:client_user/screens/dasboard/beranda/add_destination_location_screen.dart';
+import 'package:client_user/screens/dasboard/dasboard_template_screen.dart';
+import 'package:client_user/screens/dasboard/errorScreen/error_screen.dart';
+import 'package:client_user/screens/dasboard/errorScreen/location_error_screen.dart';
+import 'package:client_user/screens/dasboard/beranda/fulll_map_screen.dart';
+import 'package:client_user/utils/secure_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -20,14 +20,14 @@ import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 // import 'package:cached_network_image/cached_network_image.dart';
 // import 'package:geocoding/geocoding.dart';
-import 'package:airport_taxi_sharing_user_client/blocs/order/getTaxisWithinRadius/get_taxis_within_radius_bloc.dart';
-import 'package:airport_taxi_sharing_user_client/blocs/customer/getCustomer/get_customer_bloc.dart';
-import 'package:airport_taxi_sharing_user_client/blocs/customer/updateLocation/update_location_bloc.dart';
-import 'package:airport_taxi_sharing_user_client/data/models/request/update_location_request_model.dart';
+import 'package:client_user/blocs/order/getTaxisWithinRadius/get_taxis_within_radius_bloc.dart';
+import 'package:client_user/blocs/customer/getCustomer/get_customer_bloc.dart';
+import 'package:client_user/blocs/customer/updateLocation/update_location_bloc.dart';
+import 'package:client_user/data/models/request/update_location_request_model.dart';
 
-import 'package:airport_taxi_sharing_user_client/utils/location_controller.dart';
-import 'package:airport_taxi_sharing_user_client/utils/location_service.dart';
-import 'package:airport_taxi_sharing_user_client/components/loading_data_background.dart';
+import 'package:client_user/utils/location_controller.dart';
+import 'package:client_user/utils/location_service.dart';
+import 'package:client_user/components/loading_data_background.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tuple/tuple.dart';
 

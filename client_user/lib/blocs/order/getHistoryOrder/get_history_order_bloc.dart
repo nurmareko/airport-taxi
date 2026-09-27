@@ -1,6 +1,6 @@
-import 'package:airport_taxi_sharing_user_client/data/dataSources/get_history_order_api_data.dart';
-import 'package:airport_taxi_sharing_user_client/data/models/response/get_history_order_response_model.dart';
-import 'package:airport_taxi_sharing_user_client/error/new-exception.dart';
+import 'package:client_user/data/dataSources/get_history_order_api_data.dart';
+import 'package:client_user/data/models/response/get_history_order_response_model.dart';
+import 'package:client_user/error/new-exception.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 

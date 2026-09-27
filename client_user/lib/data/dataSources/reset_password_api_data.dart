@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:airport_taxi_sharing_user_client/data/models/request/reset_password_request_model.dart';
-import 'package:airport_taxi_sharing_user_client/data/models/response/reset_password_response_model.dart';
-import 'package:airport_taxi_sharing_user_client/error/new-exception.dart';
+import 'package:client_user/data/models/request/reset_password_request_model.dart';
+import 'package:client_user/data/models/response/reset_password_response_model.dart';
+import 'package:client_user/error/new-exception.dart';
 import 'package:http/http.dart' as http;
 
 class ResetPasswordAPIData {

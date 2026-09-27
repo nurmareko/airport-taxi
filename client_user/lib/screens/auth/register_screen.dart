@@ -1,13 +1,13 @@
-import 'package:airport_taxi_sharing_user_client/blocs/customer/register/register_bloc.dart';
-import 'package:airport_taxi_sharing_user_client/components/auth/app_bar.dart';
-import 'package:airport_taxi_sharing_user_client/components/auth/unverified_error_register_bottom_sheet.dart';
-import 'package:airport_taxi_sharing_user_client/components/error_message.dart';
-import 'package:airport_taxi_sharing_user_client/components/loading.dart';
+import 'package:client_user/blocs/customer/register/register_bloc.dart';
+import 'package:client_user/components/auth/app_bar.dart';
+import 'package:client_user/components/auth/unverified_error_register_bottom_sheet.dart';
+import 'package:client_user/components/error_message.dart';
+import 'package:client_user/components/loading.dart';
 
-import 'package:airport_taxi_sharing_user_client/data/models/request/register_request_model.dart';
-import 'package:airport_taxi_sharing_user_client/data/models/request/resend_otp_email_register_request_model.dart';
+import 'package:client_user/data/models/request/register_request_model.dart';
+import 'package:client_user/data/models/request/resend_otp_email_register_request_model.dart';
 
-import 'package:airport_taxi_sharing_user_client/theme/colors.dart';
+import 'package:client_user/theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

@@ -1,18 +1,18 @@
 import 'dart:io';
-import 'package:airport_taxi_sharing_user_client/screens/dasboard/dasboard_template_screen.dart';
-import 'package:airport_taxi_sharing_user_client/theme/colors.dart';
+import 'package:client_user/screens/dasboard/dasboard_template_screen.dart';
+import 'package:client_user/theme/colors.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:airport_taxi_sharing_user_client/blocs/customer/getCustomer/get_customer_bloc.dart';
-import 'package:airport_taxi_sharing_user_client/blocs/customer/updateCustomer/update_customer_bloc.dart';
-import 'package:airport_taxi_sharing_user_client/components/confirmation_bottom_sheet.dart';
-import 'package:airport_taxi_sharing_user_client/components/loading.dart';
-import 'package:airport_taxi_sharing_user_client/components/loading_data_background.dart';
-import 'package:airport_taxi_sharing_user_client/data/models/request/update_customer_request_model.dart';
+import 'package:client_user/blocs/customer/getCustomer/get_customer_bloc.dart';
+import 'package:client_user/blocs/customer/updateCustomer/update_customer_bloc.dart';
+import 'package:client_user/components/confirmation_bottom_sheet.dart';
+import 'package:client_user/components/loading.dart';
+import 'package:client_user/components/loading_data_background.dart';
+import 'package:client_user/data/models/request/update_customer_request_model.dart';
 
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:permission_handler/permission_handler.dart';

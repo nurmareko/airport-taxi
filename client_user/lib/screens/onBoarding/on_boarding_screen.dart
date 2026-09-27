@@ -1,8 +1,8 @@
-import 'package:airport_taxi_sharing_user_client/screens/onBoarding/on_boarding_screen_1.dart';
-import 'package:airport_taxi_sharing_user_client/screens/onBoarding/on_boarding_screen_2.dart';
-import 'package:airport_taxi_sharing_user_client/screens/onBoarding/on_boarding_screen_3.dart';
-import 'package:airport_taxi_sharing_user_client/screens/onBoarding/on_boarding_screen_4.dart';
-import 'package:airport_taxi_sharing_user_client/theme/colors.dart';
+import 'package:client_user/screens/onBoarding/on_boarding_screen_1.dart';
+import 'package:client_user/screens/onBoarding/on_boarding_screen_2.dart';
+import 'package:client_user/screens/onBoarding/on_boarding_screen_3.dart';
+import 'package:client_user/screens/onBoarding/on_boarding_screen_4.dart';
+import 'package:client_user/theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';

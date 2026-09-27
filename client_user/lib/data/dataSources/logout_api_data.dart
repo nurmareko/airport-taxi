@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'package:airport_taxi_sharing_user_client/data/dataSources/api_constants.dart';
-import 'package:airport_taxi_sharing_user_client/error/new-exception.dart';
-import 'package:airport_taxi_sharing_user_client/utils/secure_storage.dart';
+import 'package:client_user/data/dataSources/api_constants.dart';
+import 'package:client_user/error/new-exception.dart';
+import 'package:client_user/utils/secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 class LogoutAPIData {

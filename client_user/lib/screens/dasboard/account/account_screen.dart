@@ -1,17 +1,17 @@
-import 'package:airport_taxi_sharing_user_client/components/confirmation_bottom_sheet.dart';
-import 'package:airport_taxi_sharing_user_client/components/dasboard/notification_bottom_sheet.dart';
-import 'package:airport_taxi_sharing_user_client/main.dart';
-import 'package:airport_taxi_sharing_user_client/screens/dasboard/account/change_password.dart';
-import 'package:airport_taxi_sharing_user_client/screens/dasboard/dasboard_template_screen.dart';
-import 'package:airport_taxi_sharing_user_client/screens/dasboard/errorScreen/error_screen.dart';
+import 'package:client_user/components/confirmation_bottom_sheet.dart';
+import 'package:client_user/components/dasboard/notification_bottom_sheet.dart';
+import 'package:client_user/main.dart';
+import 'package:client_user/screens/dasboard/account/change_password.dart';
+import 'package:client_user/screens/dasboard/dasboard_template_screen.dart';
+import 'package:client_user/screens/dasboard/errorScreen/error_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:airport_taxi_sharing_user_client/blocs/customer/getCustomer/get_customer_bloc.dart';
-import 'package:airport_taxi_sharing_user_client/components/loading_data_background.dart';
+import 'package:client_user/blocs/customer/getCustomer/get_customer_bloc.dart';
+import 'package:client_user/components/loading_data_background.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:airport_taxi_sharing_user_client/screens/dasboard/account/edit_account_profile_screen.dart';
-import 'package:airport_taxi_sharing_user_client/blocs/customer/logout/logout_bloc.dart';
+import 'package:client_user/screens/dasboard/account/edit_account_profile_screen.dart';
+import 'package:client_user/blocs/customer/logout/logout_bloc.dart';
 import 'package:get/get.dart';
 import 'package:firebase_messaging/firebase_messaging.dart'; // Add this import
 

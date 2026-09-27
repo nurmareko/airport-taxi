@@ -1,13 +1,13 @@
-import 'package:airport_taxi_sharing_user_client/data/dataSources/resend_otp_email_register_api_data.dart';
-import 'package:airport_taxi_sharing_user_client/data/models/request/resend_otp_email_register_request_model.dart';
-import 'package:airport_taxi_sharing_user_client/data/models/response/resend_otp_email_register_response_model_model.dart';
-import 'package:airport_taxi_sharing_user_client/error/new-exception.dart';
+import 'package:client_user/data/dataSources/resend_otp_email_register_api_data.dart';
+import 'package:client_user/data/models/request/resend_otp_email_register_request_model.dart';
+import 'package:client_user/data/models/response/resend_otp_email_register_response_model_model.dart';
+import 'package:client_user/error/new-exception.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
-import 'package:airport_taxi_sharing_user_client/data/dataSources/register_api_data.dart';
-import 'package:airport_taxi_sharing_user_client/data/models/request/register_request_model.dart';
-import 'package:airport_taxi_sharing_user_client/data/models/response/register_response_model.dart';
+import 'package:client_user/data/dataSources/register_api_data.dart';
+import 'package:client_user/data/models/request/register_request_model.dart';
+import 'package:client_user/data/models/response/register_response_model.dart';
 
 part 'register_event.dart';
 part 'register_state.dart';

@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.airport_taxi_sharing">
+    package="com.example.airport_taxi_sharing_user_client">
 
     <!-- internet -->
 
