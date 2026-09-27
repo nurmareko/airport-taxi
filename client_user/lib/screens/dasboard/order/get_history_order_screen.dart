@@ -1,0 +1,740 @@
+import 'package:airport_taxi_sharing_user_client/blocs/order/getHistoryOrder/get_history_order_bloc.dart';
+import 'package:airport_taxi_sharing_user_client/blocs/order/sendReport/send_report_bloc.dart';
+import 'package:airport_taxi_sharing_user_client/components/dasboard/loading.dart';
+import 'package:airport_taxi_sharing_user_client/components/loading_data_background.dart';
+import 'package:airport_taxi_sharing_user_client/data/models/request/send_report_request_model.dart';
+import 'package:airport_taxi_sharing_user_client/screens/dasboard/dasboard_template_screen.dart';
+import 'package:airport_taxi_sharing_user_client/screens/dasboard/errorScreen/error_screen.dart';
+import 'package:airport_taxi_sharing_user_client/screens/dasboard/order/no_history_order_screen.dart';
+import 'package:animated_snack_bar/animated_snack_bar.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
+
+class HistoryOrder extends StatefulWidget {
+  const HistoryOrder({super.key});
+
+  @override
+  State<HistoryOrder> createState() => _HistoryOrderState();
+}
+
+class _HistoryOrderState extends State<HistoryOrder> {
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+
+  Future<void> _loadData() async {
+    context.read<GetHistoryOrderBloc>().add(LoadGetHistoryOrder());
+  }
+
+  Future<void> _refreshData() async {
+    await _loadData();
+  }
+
+  String getStatusText(int status) {
+    switch (status) {
+      case 4:
+        return 'Selesai';
+      case 5:
+        return 'Dibatalkan oleh customer';
+      case 6:
+        return 'Dibatalkan oleh driver';
+      case 7:
+        return 'Ditolak oleh driver';
+      default:
+        return 'Status tidak diketahui';
+    }
+  }
+
+  Color getStatusColor(int status) {
+    switch (status) {
+      case 4:
+        return Colors.green;
+      case 5:
+      case 6:
+      case 7:
+        return Colors.red;
+      default:
+        return Colors.white;
+    }
+  }
+
+  void _showCustomerReview(BuildContext context, String driverReview) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16.0)),
+      ),
+      backgroundColor: const Color(0xFF1E282C),
+      builder: (BuildContext context) {
+        return Container(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Review dari Driver',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18.0,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 15.0),
+              Text(
+                '"$driverReview"',
+                style: const TextStyle(color: Colors.white),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _showRideDetailsModal(
+    BuildContext context,
+    orderId,
+    double lat,
+    double long,
+    customerToAirportDistance,
+    driverName,
+    cost,
+    farePerKm,
+    int status,
+    createDatetime,
+    updateDatetime
+  ) async {
+    String statusText;
+    switch (status) {
+      case 4:
+        statusText = 'Selesai';
+        break;
+      case 5:
+        statusText = 'Dibatalkan customer';
+        break;
+      case 6:
+        statusText = 'Dibatalkan driver';
+      case 7:
+        statusText = 'Ditolak driver';
+        break;
+      default:
+        statusText = 'Status tidak diketahui';
+    }
+
+    // Mengonversi lat dan long menjadi nama lokasi
+    String locationName = 'Loading...';
+    try {
+      List<Placemark> placemarks = await placemarkFromCoordinates(lat, long);
+      if (placemarks.isNotEmpty) {
+        Placemark place = placemarks[0];
+        locationName =
+            '${place.street}, ${place.locality}, ${place.administrativeArea}';
+      } else {
+        locationName = 'Tidak dapat menemukan lokasi';
+      }
+    } catch (e) {
+      locationName = 'Error: $e';
+    }
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          backgroundColor: const Color(0xFF1E282C),
+          child: Stack(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 20),
+                    Center(
+                      child: Text(
+                        'Detail Informasi Riwayat Pesanan Taksi Bandara Supadio #$orderId',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.person,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          'Nama Driver \n$driverName',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 14.0,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.money,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          'Tarif Per Km \n$farePerKm,00',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 14.0,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        const Text(
+                          'Rp',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15.5,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          'Estimasi Biaya \n$cost,00',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 14.0,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.route,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          'Estimasi Jarak ke Bandara \n${(customerToAirportDistance / 1000).toStringAsFixed(1)} km',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 14.0,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.book,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          'Status \n$statusText',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 14.0,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.place,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                        const SizedBox(width: 10),
+                        Flexible(
+                          child: Text(
+                            'Lokasi Penjemputan \n$locationName',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 14.0,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 5,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.create,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          'Dibuat Pada \n$createDatetime',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 14.0,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.access_time,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          'Terakhir Diperbarui\n$updateDatetime',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 14.0,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                  ],
+                ),
+              ),
+              Positioned(
+                top: 10,
+                right: 10,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Icon(
+                    Icons.close,
+                    color: Colors.grey,
+                    size: 25,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _showReportModal(BuildContext context, id) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        String message = '';
+        return AlertDialog(
+          backgroundColor: const Color(0xFF1E282C),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          title: const Text(
+            'Kirim Pesan Pengaduan',
+            style: TextStyle(color: Colors.white),
+          ),
+          content: SizedBox(
+            height: 160,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  const Text(
+                    'Pesan pengaduan Anda akan dikirimkan ke Admin.',
+                    style: TextStyle(color: Colors.white54, fontSize: 12),
+                  ),
+                  const SizedBox(height: 10),
+                  TextFormField(
+                    onChanged: (value) {
+                      message = value;
+                    },
+                    style: const TextStyle(color: Colors.white),
+                    maxLines: 10,
+                    decoration: const InputDecoration(
+                      hintText: "Tulis pesan Anda di sini...",
+                      hintStyle: TextStyle(color: Colors.white54),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white54),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              child: const Text('Batal', style: TextStyle(color: Colors.white)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Kirim', style: TextStyle(color: Colors.white)),
+              onPressed: () {
+                if (message.trim().isEmpty) {
+                  AnimatedSnackBar.removeAll();
+                  AnimatedSnackBar.material(
+                    'Pesan tidak boleh kosong!',
+                    type: AnimatedSnackBarType.error,
+                    mobileSnackBarPosition: MobileSnackBarPosition.bottom,
+                  ).show(context);
+                } else {
+                  _sendReport(id, message);
+                  Navigator.of(context).pop();
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _sendReport(String orderId, String message) {
+    final requestModelReport =
+        SendReportRequestModel(orderId: orderId, message: message);
+
+    context.read<SendReportBloc>().add(
+          LoadSendReportEvent(request: requestModelReport),
+        );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return RefreshIndicator(
+      onRefresh: _refreshData,
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: Stack(
+          children: [
+            BlocBuilder<GetHistoryOrderBloc, GetHistoryOrderState>(
+              builder: (context, state) {
+                if (state is GetHistoryOrderLoading) {
+                  return const LoadingModalDataBackground();
+                } else if (state is GetHistoryOrderLoaded) {
+                  final orders = state.model.data;
+                  if (orders.isEmpty) {
+                    return const NoHistoryOrder();
+                  }
+                  AnimatedSnackBar.removeAll();
+                  AnimatedSnackBar.material(
+                    'Refresh untuk mendapatkan data terbaru',
+                    type: AnimatedSnackBarType.info,
+                    mobileSnackBarPosition: MobileSnackBarPosition.bottom,
+                  ).show(context);
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.only(left: 10.0),
+                            child: Text(
+                              'Riwayat Pesanan Taksi Bandara',
+                              style: TextStyle(
+                                fontSize: 14.0,
+                                fontWeight: FontWeight.normal,
+                                color: Colors.white70,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Container(
+                              height: 2,
+                              color: const Color(0xFF1E272E),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: orders.length,
+                        itemBuilder: (context, index) {
+                          final order = orders[index];
+                          return InkWell(
+                            onTap: () {
+                              _showRideDetailsModal(
+                                context,
+                                order.id,
+                                order.lat,
+                                order.long,
+                                order.customerToAirportDistance,
+                                order.driver.name,
+                                order.cost,
+                                order.farePerKm,
+                                order.status,
+                                order.createDatetime,
+                                order.updateDatetime,
+                              );
+                            },
+                            child: Card(
+                              color: const Color(0xFF1E282C),
+                              margin: const EdgeInsets.all(8.0),
+                              child: Stack(
+                                children: [
+                                  Positioned(
+                                    top: 0,
+                                    left: 0,
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      width: 20,
+                                      height: 20,
+                                      decoration: const BoxDecoration(
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(8.0),
+                                          bottomRight: Radius.circular(8.0),
+                                        ),
+                                        color:
+                                            Color.fromARGB(255, 33, 156, 144),
+                                      ),
+                                      child: Text(
+                                        '${index + 1}',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(25.0),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          width: 60.0,
+                                          height: 60.0,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(8.0),
+                                            image: const DecorationImage(
+                                              image: AssetImage(
+                                                  'images/taxi-icon.png'),
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 15.0),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                'Pesanan Taksi Bandara \nSupadio #${order.id}',
+                                                style: const TextStyle(
+                                                  color: Colors.white70,
+                                                ),
+                                              ),
+                                              const SizedBox(height: 10.0),
+                                              Row(
+                                                children: [
+                                                  const Icon(
+                                                    Icons.info_outline,
+                                                    color: Colors.white,
+                                                    size: 16.0,
+                                                  ),
+                                                  const SizedBox(width: 5),
+                                                  Text(
+                                                    getStatusText(order.status),
+                                                    style: TextStyle(
+                                                      color: getStatusColor(
+                                                          order.status),
+                                                      fontSize: 12.0,
+                                                      fontWeight:
+                                                          FontWeight.normal,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              const SizedBox(height: 10.0),
+                                              if (order.review?.driverRating ==
+                                                  0) ...[
+                                                const SizedBox(height: 15.0),
+                                                const Text(
+                                                  "Tidak ada rating \ndan review dari driver",
+                                                  style: TextStyle(
+                                                    fontSize: 12.0,
+                                                    color: Colors.grey,
+                                                  ),
+                                                ),
+                                              ] else if (order
+                                                      .review?.driverRating !=
+                                                  0) ...[
+                                                Row(
+                                                  children: [
+                                                    RatingBarIndicator(
+                                                      rating: order.review
+                                                              ?.driverRating
+                                                              .toDouble() ??
+                                                          0.0,
+                                                      itemBuilder:
+                                                          (context, index) =>
+                                                              const Icon(
+                                                        Icons.star,
+                                                        color: Colors.yellow,
+                                                      ),
+                                                      itemCount: 5,
+                                                      itemSize: 18.0,
+                                                      direction:
+                                                          Axis.horizontal,
+                                                    ),
+                                                    if (order
+                                                            .review
+                                                            ?.driverReview
+                                                            .isNotEmpty ??
+                                                        false)
+                                                      IconButton(
+                                                        icon: const Icon(
+                                                          Icons.comment,
+                                                          color: Colors.white,
+                                                        ),
+                                                        onPressed: () {
+                                                          _showCustomerReview(
+                                                              context,
+                                                              order.review!
+                                                                  .driverReview);
+                                                        },
+                                                      ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ],
+                                          ),
+                                        ),
+                                        BlocListener<SendReportBloc,
+                                            SendReportState>(
+                                          listener: (context, state) {
+                                            if (state is SendReportFailure) {
+                                              if (state.errorMessage ==
+                                                  "Unauthorized") {
+                                                SchedulerBinding.instance
+                                                    .addPostFrameCallback((_) {
+                                                  Get.toNamed('/onBoarding');
+                                                });
+                                              }
+                                              AnimatedSnackBar.removeAll();
+                                              AnimatedSnackBar.material(
+                                                'Pesan pengaduan gagal dikirimkan!',
+                                                type:
+                                                    AnimatedSnackBarType.error,
+                                                mobileSnackBarPosition:
+                                                    MobileSnackBarPosition
+                                                        .bottom,
+                                              ).show(context);
+                                            }
+                                            if (state is SendReportSuccess) {
+                                              AnimatedSnackBar.removeAll();
+                                              AnimatedSnackBar.material(
+                                                'Pesan pengaduan berhasil dikirimkan!',
+                                                type: AnimatedSnackBarType
+                                                    .success,
+                                                mobileSnackBarPosition:
+                                                    MobileSnackBarPosition
+                                                        .bottom,
+                                              ).show(context);
+                                            }
+                                          },
+                                          child: IconButton(
+                                              icon: const Icon(
+                                                  Icons.report_problem,
+                                                  color: Colors.red),
+                                              onPressed: () {
+                                                _showReportModal(
+                                                    context, order.id);
+                                              }),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Positioned(
+                                    bottom: 5,
+                                    right: 16,
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(bottom: 5),
+                                      child: Text(
+                                        order.createDatetime,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 10.0,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  );
+                } else if (state is GetHistoryOrderFailure) {
+                  if (state.errorMessage == "Unauthorized") {
+                    SchedulerBinding.instance.addPostFrameCallback((_) {
+                      Get.toNamed('/onBoarding');
+                    });
+                  }
+                  return SomethingError(
+                    onNavigate: () {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              const DasboardTemplate(initialPageIndex: 3),
+                        ),
+                      );
+                    },
+                  );
+                } else {
+                  return const Center(
+                    child: Text('Memuat Data...'),
+                  );
+                }
+              },
+            ),
+            BlocBuilder<SendReportBloc, SendReportState>(
+              builder: (context, state) {
+                if (state is SendReportLoading) {
+                  return const LoadingModal();
+                } else {
+                  return const SizedBox.shrink();
+                }
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "926442896520",
+    "project_id": "airport-taxi-sharing-ce9e9",
+    "storage_bucket": "airport-taxi-sharing-ce9e9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:926442896520:android:d51aacd48d33994197f33d",
+        "android_client_info": {
+          "package_name": "com.example.airport_taxi_sharing_user_client"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyADG6aIFYhEH98ok_knsa_nt1YyObTf97E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

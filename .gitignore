@@ -1,0 +1,92 @@
+# --------------------------------------------------
+# Secrets and environment configuration
+# --------------------------------------------------
+.env
+.env.*
+!.env.example
+!.env.template
+
+# Firebase Admin credential present in this project
+/server/src/config/push-notification-key.json
+
+# Other service-account credential files
+**/service-account*.json
+**/serviceAccount*.json
+**/*firebase-adminsdk*.json
+
+# Signing keys and certificates
+*.jks
+*.keystore
+*.p12
+*.pfx
+*.key
+*.pem
+key.properties
+
+# --------------------------------------------------
+# Node.js: backend and React admin
+# --------------------------------------------------
+node_modules/
+dist/
+coverage/
+.nyc_output/
+*.tsbuildinfo
+
+# Hosting tools' local configuration
+.vercel/
+.netlify/
+
+# --------------------------------------------------
+# Flutter / Dart
+# --------------------------------------------------
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+
+# Flutter symbolication and obfuscation outputs
+app.*.symbols
+app.*.map.json
+
+# --------------------------------------------------
+# Android / Kotlin / Gradle
+# --------------------------------------------------
+.gradle/
+.kotlin/
+.cxx/
+.externalNativeBuild/
+local.properties
+captures/
+*.apk
+*.aab
+
+# --------------------------------------------------
+# iOS / macOS
+# --------------------------------------------------
+Pods/
+.symlinks/
+DerivedData/
+xcuserdata/
+*.xcuserstate
+*.ipa
+
+# --------------------------------------------------
+# Editor and operating-system files
+# --------------------------------------------------
+.idea/
+*.iml
+*.ipr
+*.iws
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# --------------------------------------------------
+# Logs
+# --------------------------------------------------
+*.log
