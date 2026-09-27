@@ -1,16 +1,10 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from 'firebase/app';
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-export default {
-  firebaseConfig: {
-    apiKey: 'AIzaSyDTlja5aWsg4hlgsmkhLbvLEFV5ACizSr4',
-    authDomain: 'airport-taxi-sharing-ce9e9.firebaseapp.com',
-    projectId: 'airport-taxi-sharing-ce9e9',
-    storageBucket: 'airport-taxi-sharing-ce9e9.appspot.com',
-    messagingSenderId: '926442896520',
-    appId: '1:926442896520:web:860fd033ba661d5897f33d',
-  },
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: 'AIzaSyDfN0oc0WyP4R9eznOxlHfuv1iZ55jbd24',
+  authDomain: 'airport-taxi-f58c5.firebaseapp.com',
+  projectId: 'airport-taxi-f58c5',
+  storageBucket: 'airport-taxi-f58c5.firebasestorage.app',
+  messagingSenderId: '855413045917',
+  appId: '1:855413045917:web:77d2cd48f3282004bef274',
+  measurementId: 'G-91G9MBF9GY',
 };

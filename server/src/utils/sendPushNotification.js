@@ -8,7 +8,7 @@ const serviceAccount = JSON.parse(
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  projectId: 'airport-taxi-sharing-ce9e9',
+  projectId: serviceAccount.project_id,
 });
 
 /**
