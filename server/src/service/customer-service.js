@@ -1,4 +1,14 @@
-import { validate } from "../validation/validation.js";
+import moment from 'moment';
+import bcrypt from 'bcryptjs';
+import { v4 as uuid } from 'uuid';
+import { initializeApp } from 'firebase/app';
+import {
+  getStorage,
+  ref,
+  getDownloadURL,
+  uploadBytesResumable,
+} from 'firebase/storage';
+import { validate } from '../validation/validation.js';
 import {
   registerCustomerValidation,
   resendOTPEmailRegisterCustomerValidation,
@@ -14,22 +24,12 @@ import {
   changePasswordCustomerValidation,
   updateLocationCustomerValidation,
   updateDeviceTokenCustomerValidation,
-} from "../validation/customer-validation.js";
-import { prismaClient } from "../application/database.js";
-import { ResponseError } from "../error/response-error.js";
-import moment from "moment";
-import bcrypt from "bcryptjs";
-import { v4 as uuid } from "uuid";
-import { sendOTPRegisterCustomerByEmail } from "../utils/sendEmailRegister.js";
-import { sendOTPForgotPasswordCustomerByEmail } from "../utils/sendEmailForgotPassword.js";
-import { initializeApp } from "firebase/app";
-import {
-  getStorage,
-  ref,
-  getDownloadURL,
-  uploadBytesResumable,
-} from "firebase/storage";
-import config from "../config/firebase.config.js";
+} from '../validation/customer-validation.js';
+import { prismaClient } from '../application/database.js';
+import { ResponseError } from '../error/response-error.js';
+import { sendOTPRegisterCustomerByEmail } from '../utils/sendEmailRegister.js';
+import { sendOTPForgotPasswordCustomerByEmail } from '../utils/sendEmailForgotPassword.js';
+import config from '../config/firebase.config.js';
 
 initializeApp(config.firebaseConfig);
 
@@ -52,10 +52,10 @@ const register = async (request) => {
 
   if (countCustomer === 1) {
     if (customerDatabase.verifiedEmail) {
-      throw new ResponseError(400, "registered", customer.email);
+      throw new ResponseError(400, 'registered', customer.email);
     }
 
-    throw new ResponseError(400, "unverified", customer.email);
+    throw new ResponseError(400, 'unverified', customer.email);
 
     // return {
     //   status:'error',
@@ -67,14 +67,13 @@ const register = async (request) => {
   const bcryptSaltRounds = 10;
   customer.password = await bcrypt.hash(customer.password, bcryptSaltRounds);
 
-  const photo =
-    "https://firebasestorage.googleapis.com/v0/b/airport-taxi-sharing-ce9e9.appspot.com/o/customer_profiles%2Fprofile_default.png?alt=media&token=0f07b40a-0f19-4229-9d37-084ec3414336";
+  const photo = 'https://firebasestorage.googleapis.com/v0/b/airport-taxi-sharing-ce9e9.appspot.com/o/customer_profiles%2Fprofile_default.png?alt=media&token=0f07b40a-0f19-4229-9d37-084ec3414336';
   customer.photo = photo;
 
   const otp = Math.floor(1000 + Math.random() * 9000).toString();
   customer.otp = otp;
 
-  const expirationTime = moment().add(1, "minutes").toISOString();
+  const expirationTime = moment().add(1, 'minutes').toISOString();
   customer.otpExpiry = expirationTime;
 
   customer.verifiedEmail = false;
@@ -83,10 +82,10 @@ const register = async (request) => {
   // Kirim OTP via email
   try {
     await sendOTPRegisterCustomerByEmail(customer.email, otp, customer.name);
-    console.log("Email sent successfully.");
+    console.log('Email sent successfully.');
   } catch (error) {
-    console.error("Error sending email:", error);
-    throw new ResponseError(500, "Internal Server Error");
+    console.error('Error sending email:', error);
+    throw new ResponseError(500, 'Internal Server Error');
   }
 
   return prismaClient.customer.create({
@@ -103,35 +102,35 @@ const resendOTPEmailRegister = async (request) => {
 
   const existingCustomer = await prismaClient.customer.findUnique({
     where: {
-      email: email,
+      email,
     },
   });
 
   if (!existingCustomer) {
-    throw new ResponseError(404, "Customer tidak ditemukan", email);
+    throw new ResponseError(404, 'Customer tidak ditemukan', email);
   }
 
   if (existingCustomer.verifiedEmail) {
-    throw new ResponseError(400, "Email sudah diverifikasi", email);
+    throw new ResponseError(400, 'Email sudah diverifikasi', email);
   }
 
   const otp = Math.floor(1000 + Math.random() * 9000).toString();
-  const expirationTime = moment().add(1, "minutes").toISOString();
+  const expirationTime = moment().add(1, 'minutes').toISOString();
 
   try {
     await sendOTPRegisterCustomerByEmail(email, otp, existingCustomer.name);
-    console.log("Email sent successfully.");
+    console.log('Email sent successfully.');
   } catch (error) {
-    console.error("Error sending email:", error);
-    throw new ResponseError(500, "Internal Server Error");
+    console.error('Error sending email:', error);
+    throw new ResponseError(500, 'Internal Server Error');
   }
 
   return await prismaClient.customer.update({
     where: {
-      email: email,
+      email,
     },
     data: {
-      otp: otp,
+      otp,
       otpExpiry: expirationTime,
     },
     select: {
@@ -143,33 +142,33 @@ const resendOTPEmailRegister = async (request) => {
 const verificationEmailRegister = async (request) => {
   const { email, otp } = validate(
     verificationEmailRegisterCustomerValidation,
-    request
+    request,
   );
 
   const existingCustomer = await prismaClient.customer.findUnique({
     where: {
-      email: email,
+      email,
     },
   });
 
   if (!existingCustomer) {
-    throw new ResponseError(404, "Customer tidak ditemukan", email);
+    throw new ResponseError(404, 'Customer tidak ditemukan', email);
   }
 
   if (
-    existingCustomer.otp != otp ||
-    moment(existingCustomer.otpExpiry).isBefore(moment())
+    existingCustomer.otp != otp
+    || moment(existingCustomer.otpExpiry).isBefore(moment())
   ) {
     throw new ResponseError(
       400,
-      "Kode OTP tidak valid atau telah kadaluarsa",
-      existingCustomer.email
+      'Kode OTP tidak valid atau telah kadaluarsa',
+      existingCustomer.email,
     );
   }
 
   return await prismaClient.customer.update({
     where: {
-      email: email,
+      email,
     },
     data: {
       otp: null,
@@ -188,39 +187,39 @@ const forgotPassword = async (request) => {
 
   const existingCustomer = await prismaClient.customer.findUnique({
     where: {
-      email: email,
+      email,
     },
   });
 
   if (!existingCustomer) {
-    throw new ResponseError(404, "Customer tidak ditemukan", email);
+    throw new ResponseError(404, 'Customer tidak ditemukan', email);
   }
 
   if (!existingCustomer.verifiedEmail) {
-    throw new ResponseError(404, "Customer tidak ditemukan", email);
+    throw new ResponseError(404, 'Customer tidak ditemukan', email);
   }
 
   const otp = Math.floor(1000 + Math.random() * 9000).toString();
-  const expirationTime = moment().add(1, "minutes").toISOString();
+  const expirationTime = moment().add(1, 'minutes').toISOString();
 
   try {
     await sendOTPForgotPasswordCustomerByEmail(
       email,
       otp,
-      existingCustomer.name
+      existingCustomer.name,
     );
-    console.log("Email sent successfully.");
+    console.log('Email sent successfully.');
   } catch (error) {
-    console.error("Error sending email:", error);
-    throw new ResponseError(500, "Internal Server Error");
+    console.error('Error sending email:', error);
+    throw new ResponseError(500, 'Internal Server Error');
   }
 
   return await prismaClient.customer.update({
     where: {
-      email: email,
+      email,
     },
     data: {
-      otp: otp,
+      otp,
       otpExpiry: expirationTime,
     },
     select: {
@@ -231,40 +230,40 @@ const forgotPassword = async (request) => {
 const resendOTPEmailForgotPassword = async (request) => {
   const { email } = validate(
     resendOTPEmailForgotPasswordCustomerValidation,
-    request
+    request,
   );
 
   const existingCustomer = await prismaClient.customer.findUnique({
     where: {
-      email: email,
+      email,
     },
   });
 
   if (!existingCustomer) {
-    throw new ResponseError(404, "Customer tidak ditemukan", email);
+    throw new ResponseError(404, 'Customer tidak ditemukan', email);
   }
 
   const otp = Math.floor(1000 + Math.random() * 9000).toString();
-  const expirationTime = moment().add(1, "minutes").toISOString();
+  const expirationTime = moment().add(1, 'minutes').toISOString();
 
   try {
     await sendOTPForgotPasswordCustomerByEmail(
       email,
       otp,
-      existingCustomer.name
+      existingCustomer.name,
     );
-    console.log("Email sent successfully.");
+    console.log('Email sent successfully.');
   } catch (error) {
-    console.error("Error sending email:", error);
-    throw new ResponseError(500, "Internal Server Error");
+    console.error('Error sending email:', error);
+    throw new ResponseError(500, 'Internal Server Error');
   }
 
   return await prismaClient.customer.update({
     where: {
-      email: email,
+      email,
     },
     data: {
-      otp: otp,
+      otp,
       otpExpiry: expirationTime,
     },
     select: {
@@ -276,33 +275,33 @@ const resendOTPEmailForgotPassword = async (request) => {
 const verificationEmailForgotPassword = async (request) => {
   const { email, otp } = validate(
     verificationEmailForgotPasswordCustomerValidation,
-    request
+    request,
   );
 
   const existingCustomer = await prismaClient.customer.findUnique({
     where: {
-      email: email,
+      email,
     },
   });
 
   if (!existingCustomer) {
-    throw new ResponseError(404, "Customer tidak ditemukan", email);
+    throw new ResponseError(404, 'Customer tidak ditemukan', email);
   }
 
   if (
-    existingCustomer.otp != otp ||
-    moment(existingCustomer.otpExpiry).isBefore(moment())
+    existingCustomer.otp != otp
+    || moment(existingCustomer.otpExpiry).isBefore(moment())
   ) {
     throw new ResponseError(
       400,
-      "Kode OTP tidak valid atau telah kadaluarsa",
-      existingCustomer.email
+      'Kode OTP tidak valid atau telah kadaluarsa',
+      existingCustomer.email,
     );
   }
 
   return await prismaClient.customer.update({
     where: {
-      email: email,
+      email,
     },
     data: {
       otp: null,
@@ -326,8 +325,8 @@ const resetPassword = async (request) => {
   if (!customerDatabase || !customerDatabase.verifiedEmail) {
     throw new ResponseError(
       400,
-      "customer tidak dapat ditemukan",
-      customer.email
+      'customer tidak dapat ditemukan',
+      customer.email,
     );
   }
 
@@ -357,24 +356,24 @@ const login = async (request) => {
   });
 
   if (!customer) {
-    throw new ResponseError(401, "Kredensial tidak valid", loginRequest.email);
+    throw new ResponseError(401, 'Kredensial tidak valid', loginRequest.email);
   }
 
   if (customer.status === false) {
-    throw new ResponseError(403, "Akun Anda dinonaktifkan", loginRequest.email);
+    throw new ResponseError(403, 'Akun Anda dinonaktifkan', loginRequest.email);
   }
 
   if (customer.verifiedEmail) {
     const isPasswordValid = await bcrypt.compare(
       loginRequest.password,
-      customer.password
+      customer.password,
     );
 
     if (!isPasswordValid) {
       throw new ResponseError(
         401,
-        "Kredensial tidak valid",
-        loginRequest.email
+        'Kredensial tidak valid',
+        loginRequest.email,
       );
     }
 
@@ -384,8 +383,8 @@ const login = async (request) => {
 
     return prismaClient.customer.update({
       data: {
-        token: token,
-        tokenExpiry: tokenExpiry,
+        token,
+        tokenExpiry,
       },
       where: {
         email: customer.email,
@@ -394,9 +393,8 @@ const login = async (request) => {
         token: true,
       },
     });
-  } else {
-    throw new ResponseError(401, "Kredensial tidak valid", loginRequest.email);
   }
+  throw new ResponseError(401, 'Kredensial tidak valid', loginRequest.email);
 };
 
 const checkAuthentication = async (email) => {
@@ -404,7 +402,7 @@ const checkAuthentication = async (email) => {
 
   const customer = await prismaClient.customer.findUnique({
     where: {
-      email: email,
+      email,
     },
     select: {
       token: true,
@@ -412,7 +410,7 @@ const checkAuthentication = async (email) => {
   });
 
   if (!customer) {
-    throw new ResponseError(404, "Customer tidak dapat ditemukan", email);
+    throw new ResponseError(404, 'Customer tidak dapat ditemukan', email);
   }
 
   return customer;
@@ -423,7 +421,7 @@ const get = async (email) => {
 
   const customer = await prismaClient.customer.findUnique({
     where: {
-      email: email,
+      email,
     },
     select: {
       token: true,
@@ -437,7 +435,7 @@ const get = async (email) => {
   });
 
   if (!customer) {
-    throw new ResponseError(404, "Customer tidak dapat ditemukan", email);
+    throw new ResponseError(404, 'Customer tidak dapat ditemukan', email);
   }
 
   return customer;
@@ -455,12 +453,12 @@ const update = async (requestData, requestFiles) => {
   if (!customer) {
     throw new ResponseError(
       404,
-      "Customer tidak dapat ditemukan",
-      updateRequest.email
+      'Customer tidak dapat ditemukan',
+      updateRequest.email,
     );
   }
 
-  let updatedCustomerData = {
+  const updatedCustomerData = {
     name: updateRequest.name,
     phoneNumber: updateRequest.phoneNumber,
   };
@@ -470,18 +468,18 @@ const update = async (requestData, requestFiles) => {
 
     const storageRef = ref(
       storage,
-      `customer_profiles/${requestFiles.originalname + " " + dateTime}`
+      `customer_profiles/${`${requestFiles.originalname} ${dateTime}`}`,
     );
 
     const metadata = {
-      contentType: "image/jpeg",
+      contentType: 'image/jpeg',
     };
 
     // Upload the file to Firebase Storage
     const snapshot = await uploadBytesResumable(
       storageRef,
       requestFiles.buffer,
-      metadata
+      metadata,
     );
 
     const imageURL = await getDownloadURL(snapshot.ref);
@@ -504,42 +502,40 @@ const update = async (requestData, requestFiles) => {
 
 const giveCurrentDateTime = () => {
   const today = new Date();
-  const date =
-    today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
-  const time =
-    today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-  const dateTime = date + " " + time;
+  const date = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+  const time = `${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`;
+  const dateTime = `${date} ${time}`;
   return dateTime;
 };
 
 const changePassword = async (email, request) => {
   const changePasswordRequest = validate(
     changePasswordCustomerValidation,
-    request
+    request,
   );
 
   const customer = await prismaClient.customer.findUnique({
     where: {
-      email: email,
+      email,
     },
   });
 
   if (!customer) {
-    throw new ResponseError(404, "Customer tidak ditemukan", email);
+    throw new ResponseError(404, 'Customer tidak ditemukan', email);
   }
 
   const isOldPasswordValid = await bcrypt.compare(
     changePasswordRequest.oldPassword,
-    customer.password
+    customer.password,
   );
 
   if (!isOldPasswordValid) {
-    throw new ResponseError(401, "Password lama tidak valid", customer.email);
+    throw new ResponseError(401, 'Password lama tidak valid', customer.email);
   }
 
   const newPasswordHash = await bcrypt.hash(
     changePasswordRequest.newPassword,
-    10
+    10,
   );
 
   const changePassword = await prismaClient.customer.update({
@@ -557,24 +553,24 @@ const changePassword = async (email, request) => {
 const updateLocation = async (email, requestData) => {
   const updateLocationRequest = validate(
     updateLocationCustomerValidation,
-    requestData
+    requestData,
   );
 
   const customer = await prismaClient.customer.findUnique({
     where: {
-      email: email,
+      email,
     },
   });
 
   if (!customer) {
     throw new ResponseError(
       404,
-      "Customer tidak dapat ditemukan",
-      updateRequest.email
+      'Customer tidak dapat ditemukan',
+      updateRequest.email,
     );
   }
 
-  let data = {
+  const data = {
     lat: updateLocationRequest.latitude,
     long: updateLocationRequest.longitude,
   };
@@ -582,7 +578,7 @@ const updateLocation = async (email, requestData) => {
     where: {
       email: customer.email,
     },
-    data: data,
+    data,
     select: {
       email: true,
     },
@@ -594,31 +590,31 @@ const updateLocation = async (email, requestData) => {
 const updateDeviceToken = async (email, requestData) => {
   const updateDeviceTokenRequest = validate(
     updateDeviceTokenCustomerValidation,
-    requestData
+    requestData,
   );
 
   const customer = await prismaClient.customer.findUnique({
     where: {
-      email: email,
+      email,
     },
   });
 
   if (!customer) {
     throw new ResponseError(
       404,
-      "Customer tidak dapat ditemukan",
-      updateDeviceTokenRequest.email
+      'Customer tidak dapat ditemukan',
+      updateDeviceTokenRequest.email,
     );
   }
 
-  let data = {
+  const data = {
     deviceToken: updateDeviceTokenRequest.deviceToken,
   };
   const updatedCustomer = await prismaClient.customer.update({
     where: {
       email: customer.email,
     },
-    data: data,
+    data,
     select: {
       deviceToken: true,
     },
@@ -632,17 +628,17 @@ const logout = async (email) => {
 
   const customer = await prismaClient.customer.findUnique({
     where: {
-      email: email,
+      email,
     },
   });
 
   if (!customer) {
-    throw new ResponseError(404, "customer is not found");
+    throw new ResponseError(404, 'customer is not found');
   }
 
   return prismaClient.customer.update({
     where: {
-      email: email,
+      email,
     },
     data: {
       token: null,

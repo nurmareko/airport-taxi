@@ -1,4 +1,4 @@
-import adminService from "../service/admin-service.js";
+import adminService from '../service/admin-service.js';
 
 // login
 
@@ -15,7 +15,7 @@ const login = async (req, res, next) => {
 
 const getCurrent = async (req, res, next) => {
   try {
-    const email = req.admin.email;
+    const { email } = req.admin;
     const result = await adminService.getCurrent(email);
     res.status(200).json({
       data: result,
@@ -63,9 +63,9 @@ const getFare = async (req, res, next) => {
 
 const updateFare = async (req, res, next) => {
   try {
-    const email = req.admin.email;
-    const fareId = req.body.fareId;
-    const farePerKm = req.body.farePerKm;
+    const { email } = req.admin;
+    const { fareId } = req.body;
+    const { farePerKm } = req.body;
     const result = await adminService.updateFare(email, fareId, farePerKm);
     res.status(200).json({
       data: result,
@@ -78,7 +78,7 @@ const updateFare = async (req, res, next) => {
 const activateDriverAccount = async (req, res, next) => {
   try {
     // const email = req.admin.email;
-    const driverId = req.body.driverId;
+    const { driverId } = req.body;
     console.log(driverId);
     const result = await adminService.activateDriverAccount(driverId);
     res.status(200).json({
@@ -92,8 +92,8 @@ const activateDriverAccount = async (req, res, next) => {
 const deactivateDriverAccount = async (req, res, next) => {
   try {
     // const email = req.admin.email;
-    const driverId = req.body.driverId;
-    const reason = req.body.reason;
+    const { driverId } = req.body;
+    const { reason } = req.body;
     const result = await adminService.deactivateDriverAccount(driverId, reason);
     res.status(200).json({
       data: result,
@@ -106,7 +106,7 @@ const deactivateDriverAccount = async (req, res, next) => {
 const activateCustomerAccount = async (req, res, next) => {
   try {
     // const email = req.admin.email;
-    const customerId = req.body.customerId;
+    const { customerId } = req.body;
     console.log(customerId);
     const result = await adminService.activateCustomerAccount(customerId);
     res.status(200).json({
@@ -120,11 +120,11 @@ const activateCustomerAccount = async (req, res, next) => {
 const deactivateCustomerAccount = async (req, res, next) => {
   try {
     // const email = req.admin.email;
-    const customerId = req.body.customerId;
-    const reason = req.body.reason;
+    const { customerId } = req.body;
+    const { reason } = req.body;
     const result = await adminService.deactivateCustomerAccount(
       customerId,
-      reason
+      reason,
     );
     res.status(200).json({
       data: result,
@@ -162,7 +162,7 @@ const logout = async (req, res, next) => {
   try {
     await adminService.logout(req.admin.email);
     res.status(200).json({
-      data: "OK",
+      data: 'OK',
     });
   } catch (e) {
     next(e);

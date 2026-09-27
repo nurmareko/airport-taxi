@@ -1,10 +1,10 @@
-import nodemailer from "nodemailer";
-import dotenv from "dotenv";
+import nodemailer from 'nodemailer';
+import dotenv from 'dotenv';
 
 dotenv.config();
 
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  service: 'gmail',
   host: process.env.EMAIL_HOST,
   port: process.env.EMAIL_PORT,
   secure: false,
@@ -18,7 +18,7 @@ const sendOTPRegisterCustomerByEmail = (email, otp, name) => {
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: email,
-    subject: "Verifikasi Email Pendaftaran Customer",
+    subject: 'Verifikasi Email Pendaftaran Customer',
     html: `
             <p>Hai ${name},</p>
             <p>Terima kasih telah mendaftar!</p>
@@ -45,7 +45,7 @@ const sendOTPRegisterDriverByEmail = (email, otp, name) => {
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: email,
-    subject: "Verifikasi Email Pendaftaran Driver",
+    subject: 'Verifikasi Email Pendaftaran Driver',
     html: `
             <p>Hai ${name},</p>
             <p>Terima kasih telah mendaftar!</p>

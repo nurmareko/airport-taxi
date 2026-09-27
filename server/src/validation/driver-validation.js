@@ -1,4 +1,4 @@
-import Joi from "joi";
+import Joi from 'joi';
 
 const registerDriverValidation = Joi.object({
   email: Joi.string().email().required(),
@@ -66,7 +66,7 @@ const updateLocationDriverValidation = Joi.object({
 
 const changePasswordDriverValidation = Joi.object({
   oldPassword: Joi.string().required(),
-  newPassword: Joi.string().required().disallow(Joi.ref("oldPassword")),
+  newPassword: Joi.string().required().disallow(Joi.ref('oldPassword')),
 });
 
 const updateDeviceTokenDriverValidation = Joi.object({
@@ -87,5 +87,5 @@ export {
   updateDriverValidation,
   updateLocationDriverValidation,
   changePasswordDriverValidation,
-  updateDeviceTokenDriverValidation
+  updateDeviceTokenDriverValidation,
 };

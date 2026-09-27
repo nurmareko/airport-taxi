@@ -1,6 +1,6 @@
 // register account
 
-import driverService from "../service/driver-service.js";
+import driverService from '../service/driver-service.js';
 
 const register = async (req, res, next) => {
   try {
@@ -70,7 +70,7 @@ const resendOTPEmailForgotPassword = async (req, res, next) => {
 const verificationEmailForgotPassword = async (req, res, next) => {
   try {
     const result = await driverService.verificationEmailForgotPassword(
-      req.body
+      req.body,
     );
     res.status(200).json({
       data: result,
@@ -121,7 +121,7 @@ const checkAuthentication = async (req, res, next) => {
 
 const get = async (req, res, next) => {
   try {
-    const email = req.driver.email;
+    const { email } = req.driver;
     const result = await driverService.get(email);
     res.status(200).json({
       data: result,
@@ -146,7 +146,7 @@ const update = async (req, res, next) => {
     //     success: true,
     //   });
     // }
-    const email = req.driver.email;
+    const { email } = req.driver;
     const requestData = req.body;
 
     // Memperbarui data email pada permintaan dengan email pelanggan
@@ -169,7 +169,7 @@ const update = async (req, res, next) => {
 // update location
 const updateLocation = async (req, res, next) => {
   try {
-    const email = req.driver.email;
+    const { email } = req.driver;
     const requestData = req.body;
     const result = await driverService.updateLocation(email, requestData);
 
@@ -183,7 +183,7 @@ const updateLocation = async (req, res, next) => {
 
 const updateDeviceToken = async (req, res, next) => {
   try {
-    const email = req.driver.email;
+    const { email } = req.driver;
     const requestData = req.body;
     const result = await driverService.updateDeviceToken(email, requestData);
 
@@ -199,7 +199,7 @@ const updateDeviceToken = async (req, res, next) => {
 
 const changePassword = async (req, res, next) => {
   try {
-    const email = req.driver.email;
+    const { email } = req.driver;
     const result = await driverService.changePassword(email, req.body);
 
     res.status(200).json({
@@ -216,7 +216,7 @@ const logout = async (req, res, next) => {
   try {
     await driverService.logout(req.driver.email);
     res.status(200).json({
-      data: "OK",
+      data: 'OK',
     });
   } catch (e) {
     next(e);

@@ -1,10 +1,10 @@
-import nodemailer from "nodemailer";
-import dotenv from "dotenv";
+import nodemailer from 'nodemailer';
+import dotenv from 'dotenv';
 
 dotenv.config();
 
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  service: 'gmail',
   host: process.env.EMAIL_HOST,
   port: process.env.EMAIL_PORT,
   secure: false,
@@ -18,7 +18,7 @@ const sendOTPForgotPasswordCustomerByEmail = (email, otp, name) => {
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: email,
-    subject: "Verifikasi Email Reset Password",
+    subject: 'Verifikasi Email Reset Password',
     html: `
             <p>Hai ${name},</p>
             <p>Kami menerima permintaan untuk mereset password Anda. Gunakan kode verifikasi berikut:</p>
@@ -45,7 +45,7 @@ const sendOTPForgotPasswordDriverByEmail = (email, otp, name) => {
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: email,
-    subject: "Verifikasi Email Reset Password",
+    subject: 'Verifikasi Email Reset Password',
     html: `
             <p>Hai ${name},</p>
             <p>Kami menerima permintaan untuk mereset password Anda. Gunakan kode verifikasi berikut:</p>

@@ -1,13 +1,13 @@
-import { prismaClient } from "../application/database.js";
-import { ResponseError } from "../error/response-error.js";
-import { id } from "date-fns/locale";
-import { format } from "date-fns";
+import { id } from 'date-fns/locale';
+import { format } from 'date-fns';
+import { prismaClient } from '../application/database.js';
+import { ResponseError } from '../error/response-error.js';
 
 const getCurrentRide = async (email) => {
   // Mencari driver berdasarkan email
   const driver = await prismaClient.driver.findUnique({
     where: {
-      email: email,
+      email,
     },
     select: {
       id: true,
@@ -16,7 +16,7 @@ const getCurrentRide = async (email) => {
 
   // Jika driver tidak ditemukan, lemparkan error
   if (!driver) {
-    throw new ResponseError(404, "Driver not found", email);
+    throw new ResponseError(404, 'Driver not found', email);
   }
 
   // Mencari ride berdasarkan driverId dan rideStatus = 0
@@ -40,23 +40,22 @@ const getCurrentRide = async (email) => {
 
   // Jika ride tidak ditemukan, lemparkan error
   if (!ride) {
-    throw new ResponseError(404, "no_current_ride");
+    throw new ResponseError(404, 'no_current_ride');
   }
 
   // Format createDatetime dan updateDatetime
-  ride.createDatetime = ride.createDatetime 
-    ? format(new Date(ride.createDatetime), "dd-MM-yyyy HH:mm", { locale: id }) 
+  ride.createDatetime = ride.createDatetime
+    ? format(new Date(ride.createDatetime), 'dd-MM-yyyy HH:mm', { locale: id })
     : ''; // Format hanya jika ada
-  ride.updateDatetime = format(new Date(), "dd-MM-yyyy HH:mm", { locale: id }); // Format waktu sekarang
+  ride.updateDatetime = format(new Date(), 'dd-MM-yyyy HH:mm', { locale: id }); // Format waktu sekarang
 
   return ride;
 };
 
-
 const addRide = async (email, rideData) => {
   const driver = await prismaClient.driver.findUnique({
     where: {
-      email: email,
+      email,
     },
     select: {
       id: true,
@@ -64,7 +63,7 @@ const addRide = async (email, rideData) => {
   });
 
   if (!driver) {
-    throw new ResponseError(404, "Driver not found");
+    throw new ResponseError(404, 'Driver not found');
   }
 
   const existingOrders = await prismaClient.order.findMany({
@@ -83,7 +82,7 @@ const addRide = async (email, rideData) => {
   if (existingOrders.length > 0) {
     throw new ResponseError(
       400,
-      "Cannot add new ride: existing order status is 0, 1, 2, or 3"
+      'Cannot add new ride: existing order status is 0, 1, 2, or 3',
     );
   }
 
@@ -97,19 +96,19 @@ const addRide = async (email, rideData) => {
   });
 
   if (existingRide) {
-    throw new ResponseError(400, "Ada pengantaran yang belum selesai");
+    throw new ResponseError(400, 'Ada pengantaran yang belum selesai');
   }
 
   // Function to generate a new ride ID
   const generateRideId = async () => {
     const lastRide = await prismaClient.ride.findFirst({
-      orderBy: { id: "desc" },
+      orderBy: { id: 'desc' },
       select: { id: true },
     });
-    const lastId = lastRide?.id || "RID-000000";
-    const sequenceNumber = parseInt(lastId.split("-")[1], 10) || 0;
+    const lastId = lastRide?.id || 'RID-000000';
+    const sequenceNumber = parseInt(lastId.split('-')[1], 10) || 0;
     const newSequenceNumber = sequenceNumber + 1;
-    return `RID-${String(newSequenceNumber).padStart(6, "0")}`;
+    return `RID-${String(newSequenceNumber).padStart(6, '0')}`;
   };
 
   const rideId = await generateRideId();
@@ -130,7 +129,7 @@ const addRide = async (email, rideData) => {
 const completeRide = async (email, rideId) => {
   const driver = await prismaClient.driver.findUnique({
     where: {
-      email: email,
+      email,
     },
     select: {
       id: true,
@@ -138,7 +137,7 @@ const completeRide = async (email, rideId) => {
   });
 
   if (!driver) {
-    throw new ResponseError(404, "Driver not found");
+    throw new ResponseError(404, 'Driver not found');
   }
 
   const ride = await prismaClient.ride.findUnique({
@@ -155,7 +154,7 @@ const completeRide = async (email, rideId) => {
   });
 
   if (!ride) {
-    throw new ResponseError(404, "Ride not found");
+    throw new ResponseError(404, 'Ride not found');
   }
 
   // Check if there's an order with the rideId and status 0, 1, 2, or 3
@@ -203,7 +202,7 @@ const completeRide = async (email, rideId) => {
 const completeAndCloseRide = async (email, rideId) => {
   const driver = await prismaClient.driver.findUnique({
     where: {
-      email: email,
+      email,
     },
     select: {
       id: true,
@@ -211,7 +210,7 @@ const completeAndCloseRide = async (email, rideId) => {
   });
 
   if (!driver) {
-    throw new ResponseError(404, "Driver not found");
+    throw new ResponseError(404, 'Driver not found');
   }
 
   const ride = await prismaClient.ride.findUnique({
@@ -228,11 +227,11 @@ const completeAndCloseRide = async (email, rideId) => {
   });
 
   if (!ride) {
-    throw new ResponseError(404, "Ride not found");
+    throw new ResponseError(404, 'Ride not found');
   }
 
   if (ride.rideStatus !== 1) {
-    throw new ResponseError(400, "Ride cannot be complated and closed");
+    throw new ResponseError(400, 'Ride cannot be complated and closed');
   }
 
   // Check if there's an order with the rideId and status 0, 1, 2, or 3
@@ -280,7 +279,7 @@ const completeAndCloseRide = async (email, rideId) => {
 const cancelRide = async (email, rideId) => {
   const driver = await prismaClient.driver.findUnique({
     where: {
-      email: email,
+      email,
     },
     select: {
       id: true,
@@ -288,7 +287,7 @@ const cancelRide = async (email, rideId) => {
   });
 
   if (!driver) {
-    throw new ResponseError(404, "Driver not found");
+    throw new ResponseError(404, 'Driver not found');
   }
 
   const ride = await prismaClient.ride.findUnique({
@@ -305,11 +304,11 @@ const cancelRide = async (email, rideId) => {
   });
 
   if (!ride) {
-    throw new ResponseError(404, "Ride not found");
+    throw new ResponseError(404, 'Ride not found');
   }
 
   if (ride.rideStatus !== 0) {
-    throw new ResponseError(400, "Ride cannot be cancelled");
+    throw new ResponseError(400, 'Ride cannot be cancelled');
   }
 
   // Check if there's an order with the rideId and status 0, 1, 2, or 3
@@ -357,7 +356,7 @@ const cancelRide = async (email, rideId) => {
 const getHistoryRide = async (email) => {
   const driver = await prismaClient.driver.findUnique({
     where: {
-      email: email,
+      email,
     },
     select: {
       id: true,
@@ -365,7 +364,7 @@ const getHistoryRide = async (email) => {
   });
 
   if (!driver) {
-    throw new ResponseError(404, "Driver not found", email);
+    throw new ResponseError(404, 'Driver not found', email);
   }
 
   const rides = await prismaClient.ride.findMany({
@@ -389,10 +388,10 @@ const getHistoryRide = async (email) => {
 
   const formattedRides = rides.map((ride) => ({
     ...ride,
-    createDatetime: format(new Date(ride.createDatetime), "dd-MM-yyyy HH:mm", {
+    createDatetime: format(new Date(ride.createDatetime), 'dd-MM-yyyy HH:mm', {
       locale: id,
     }),
-    updateDatetime: format(new Date(ride.updateDatetime), "dd-MM-yyyy HH:mm", {
+    updateDatetime: format(new Date(ride.updateDatetime), 'dd-MM-yyyy HH:mm', {
       locale: id,
     }),
   }));

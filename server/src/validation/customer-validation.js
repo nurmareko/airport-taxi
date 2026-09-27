@@ -1,4 +1,4 @@
-import Joi from "joi";
+import Joi from 'joi';
 
 const registerCustomerValidation = Joi.object({
   email: Joi.string().email().required(),
@@ -56,7 +56,7 @@ const updateCustomerValidation = Joi.object({
 
 const changePasswordCustomerValidation = Joi.object({
   oldPassword: Joi.string().required(),
-  newPassword: Joi.string().required().disallow(Joi.ref("oldPassword")),
+  newPassword: Joi.string().required().disallow(Joi.ref('oldPassword')),
 });
 
 const updateLocationCustomerValidation = Joi.object({

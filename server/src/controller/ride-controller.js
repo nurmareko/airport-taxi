@@ -1,10 +1,10 @@
 // add ride by driver
 
-import rideService from "../service/ride-service.js";
+import rideService from '../service/ride-service.js';
 
 const getCurrentRide = async (req, res, next) => {
   try {
-    const email = req.driver.email;
+    const { email } = req.driver;
     const result = await rideService.getCurrentRide(email);
 
     res.status(200).json({
@@ -17,7 +17,7 @@ const getCurrentRide = async (req, res, next) => {
 
 const addRide = async (req, res, next) => {
   try {
-    const email = req.driver.email;
+    const { email } = req.driver;
     const requestData = req.body;
 
     const result = await rideService.addRide(email, requestData);
@@ -31,8 +31,8 @@ const addRide = async (req, res, next) => {
 
 const completeRide = async (req, res, next) => {
   try {
-    const email = req.driver.email;
-    const rideId = req.body.rideId;
+    const { email } = req.driver;
+    const { rideId } = req.body;
 
     const result = await rideService.completeRide(email, rideId);
 
@@ -46,8 +46,8 @@ const completeRide = async (req, res, next) => {
 
 const cancelRide = async (req, res, next) => {
   try {
-    const email = req.driver.email;
-    const rideId = req.body.rideId;
+    const { email } = req.driver;
+    const { rideId } = req.body;
 
     const result = await rideService.cancelRide(email, rideId);
 
@@ -61,8 +61,8 @@ const cancelRide = async (req, res, next) => {
 
 const completeAndCloseRide = async (req, res, next) => {
   try {
-    const email = req.driver.email;
-    const rideId = req.body.rideId;
+    const { email } = req.driver;
+    const { rideId } = req.body;
 
     const result = await rideService.completeAndCloseRide(email, rideId);
 
@@ -76,7 +76,7 @@ const completeAndCloseRide = async (req, res, next) => {
 
 const getHistoryRide = async (req, res, next) => {
   try {
-    const email = req.driver.email;
+    const { email } = req.driver;
     const result = await rideService.getHistoryRide(email);
 
     res.status(200).json({

@@ -1,10 +1,10 @@
-import nodemailer from "nodemailer";
-import dotenv from "dotenv";
+import nodemailer from 'nodemailer';
+import dotenv from 'dotenv';
 
 dotenv.config();
 
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  service: 'gmail',
   host: process.env.EMAIL_HOST,
   port: process.env.EMAIL_PORT,
   secure: false,
@@ -18,12 +18,12 @@ const sendCustomerReportEmail = (
   customerEmail,
   customerName,
   orderId,
-  message
+  message,
 ) => {
   const mailOptions = {
     from: process.env.EMAIL_USER_2,
     to: `${process.env.EMAIL_USER}`,
-    subject: "Keluhan dari Customer",
+    subject: 'Keluhan dari Customer',
     html: `
       <p>Halo Admin,</p>
       <p>Kami ingin menginformasikan bahwa ada keluhan baru yang diterima dari seorang customer. Mohon untuk segera menindaklanjuti keluhan ini.</p>
@@ -44,7 +44,7 @@ const sendCustomerReportEmail = (
   const notificationOptions = {
     from: process.env.EMAIL_USER_2,
     to: customerEmail,
-    subject: "Notifikasi Keluhan Terkirim",
+    subject: 'Notifikasi Keluhan Terkirim',
     html: `
       <p>Halo,</p>
       <p>Kami ingin menginformasikan bahwa sebuah keluhan telah berhasil dikirimkan ke admin. Berikut adalah detail keluhan yang dikirim:</p>
@@ -86,7 +86,7 @@ const sendDriverReportEmail = (driverEmail, driverName, orderId, message) => {
   const adminMailOptions = {
     from: process.env.EMAIL_USER,
     to: process.env.EMAIL_USER,
-    subject: "Keluhan dari Driver",
+    subject: 'Keluhan dari Driver',
     html: `
       <p>Halo Admin,</p>
       <p>Kami ingin menginformasikan bahwa ada keluhan baru yang diterima dari seorang driver. Mohon untuk segera menindaklanjuti keluhan ini.</p>
@@ -107,7 +107,7 @@ const sendDriverReportEmail = (driverEmail, driverName, orderId, message) => {
   const driverNotificationOptions = {
     from: process.env.EMAIL_USER,
     to: driverEmail,
-    subject: "Notifikasi Keluhan Terkirim",
+    subject: 'Notifikasi Keluhan Terkirim',
     html: `
       <p>Halo,</p>
       <p>Kami ingin menginformasikan bahwa keluhan Anda telah berhasil dikirimkan ke admin. Berikut adalah detail keluhan yang dikirim:</p>

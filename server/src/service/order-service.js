@@ -1,13 +1,12 @@
-import { prismaClient } from "../application/database.js";
-import { ResponseError } from "../error/response-error.js";
-import axios from "axios";
-import sendPushNotification from "../utils/sendPushNotification.js";
-import { sendCustomerReportEmail } from "../utils/sendEmailReport.js";
+import axios from 'axios';
+import { format } from 'date-fns';
+import { id } from 'date-fns/locale';
+import { prismaClient } from '../application/database.js';
+import { ResponseError } from '../error/response-error.js';
+import sendPushNotification from '../utils/sendPushNotification.js';
+import { sendCustomerReportEmail } from '../utils/sendEmailReport.js';
 
-import { format } from "date-fns";
-import { id } from "date-fns/locale";
-
-const GOOGLE_MAPS_API_KEY_NEW = "AIzaSyBo8MhxZIYfbX9exFOGhOuz-PnoVRwgvLY";
+const GOOGLE_MAPS_API_KEY_NEW = 'AIzaSyBo8MhxZIYfbX9exFOGhOuz-PnoVRwgvLY';
 
 function formattedDuration(seconds) {
   const minutes = Math.floor(seconds / 60);
@@ -23,12 +22,11 @@ function haversineDistance(lat1, long1, lat2, long2) {
   const R = 6371;
   const dLat = (lat2 - lat1) * (Math.PI / 180);
   const dLong = (long2 - long1) * (Math.PI / 180);
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(lat1 * (Math.PI / 180)) *
-      Math.cos(lat2 * (Math.PI / 180)) *
-      Math.sin(dLong / 2) *
-      Math.sin(dLong / 2);
+  const a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+    + Math.cos(lat1 * (Math.PI / 180))
+      * Math.cos(lat2 * (Math.PI / 180))
+      * Math.sin(dLong / 2)
+      * Math.sin(dLong / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   const distance = R * c * 1000;
   return distance;
@@ -39,23 +37,22 @@ async function getAddress(lat, long) {
     console.log(`Fetching address for lat: ${lat}, long: ${long}`);
 
     const response = await axios.get(
-      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=${GOOGLE_MAPS_API_KEY_NEW}`
+      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=${GOOGLE_MAPS_API_KEY_NEW}`,
     );
 
-    console.log("Full API Response:", JSON.stringify(response.data, null, 2));
+    console.log('Full API Response:', JSON.stringify(response.data, null, 2));
 
     if (
-      response.data.results.length > 0 &&
-      response.data.results[0].formatted_address
+      response.data.results.length > 0
+      && response.data.results[0].formatted_address
     ) {
       return response.data.results[0].formatted_address;
-    } else {
-      console.error("No address found for given coordinates");
-      throw new ResponseError(404, "No address found");
     }
+    console.error('No address found for given coordinates');
+    throw new ResponseError(404, 'No address found');
   } catch (error) {
-    console.error("Error getting address:", error);
-    throw new ResponseError(500, "Failed to fetch address data");
+    console.error('Error getting address:', error);
+    throw new ResponseError(500, 'Failed to fetch address data');
   }
 }
 
@@ -63,28 +60,27 @@ async function getDirections(
   originLat,
   originLong,
   destinationLat,
-  destinationLong
+  destinationLong,
 ) {
-  const mode = "driving";
+  const mode = 'driving';
   const apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${originLat},${originLong}&destination=${destinationLat},${destinationLong}&mode=${mode}&key=${GOOGLE_MAPS_API_KEY_NEW}`;
 
   try {
     const response = await axios.get(apiUrl);
-    const data = response.data;
+    const { data } = response;
 
-    if (data.status === "OK") {
+    if (data.status === 'OK') {
       const route = data.routes[0];
       const legs = route.legs[0];
       const distance = legs.distance.value;
       const duration = legs.duration.value;
 
       return { distance, duration };
-    } else {
-      throw new ResponseError(500, "Failed to fetch directions data");
     }
+    throw new ResponseError(500, 'Failed to fetch directions data');
   } catch (error) {
-    console.error("Error fetching directions data:", error);
-    throw new ResponseError(500, "Failed to fetch directions data");
+    console.error('Error fetching directions data:', error);
+    throw new ResponseError(500, 'Failed to fetch directions data');
   }
 }
 
@@ -94,12 +90,12 @@ const getTaxisWithinRadius = async (email) => {
 
   // Fetch customer details
   const customer = await prismaClient.customer.findUnique({
-    where: { email: email },
+    where: { email },
     select: { lat: true, long: true, name: true },
   });
 
   if (!customer) {
-    throw new ResponseError(404, "Customer not found", email);
+    throw new ResponseError(404, 'Customer not found', email);
   }
 
   // Fetch airport details
@@ -108,7 +104,7 @@ const getTaxisWithinRadius = async (email) => {
   });
 
   if (!airport) {
-    throw new ResponseError(404, "Airport not found");
+    throw new ResponseError(404, 'Airport not found');
   }
 
   // Calculate distance from customer to airport
@@ -116,7 +112,7 @@ const getTaxisWithinRadius = async (email) => {
     customer.lat,
     customer.long,
     airport.lat,
-    airport.long
+    airport.long,
   );
 
   const fareResult = await prismaClient.fare.findFirst({
@@ -173,14 +169,14 @@ const getTaxisWithinRadius = async (email) => {
 
     // If there are no orders or all orders have status other than 5, 6, or 7, include in validEnrichedRides
     if (
-      orders.length === 0 ||
-      !orders.some((order) => ![5, 6, 7].includes(order.status))
+      orders.length === 0
+      || !orders.some((order) => ![5, 6, 7].includes(order.status))
     ) {
       const distance = haversineDistance(
         customer.lat,
         customer.long,
         ride.lat,
-        ride.long
+        ride.long,
       );
       if (distance <= ride.pickupRadius) {
         let distanceEstimate;
@@ -191,24 +187,22 @@ const getTaxisWithinRadius = async (email) => {
             ride.Driver.lat,
             ride.Driver.long,
             ride.lat,
-            ride.long
+            ride.long,
           );
           const rideToCustomerEstimate = await getDirections(
             ride.lat,
             ride.long,
             customer.lat,
-            customer.long
+            customer.long,
           );
-          distanceEstimate =
-            driverToRideEstimate.distance + rideToCustomerEstimate.distance;
-          durationEstimate =
-            driverToRideEstimate.duration + rideToCustomerEstimate.duration;
+          distanceEstimate = driverToRideEstimate.distance + rideToCustomerEstimate.distance;
+          durationEstimate = driverToRideEstimate.duration + rideToCustomerEstimate.duration;
         } else if (ride.rideStatus === 1) {
           const driverToCustomerEstimate = await getDirections(
             ride.Driver.lat,
             ride.Driver.long,
             customer.lat,
-            customer.long
+            customer.long,
           );
           distanceEstimate = driverToCustomerEstimate.distance;
           durationEstimate = driverToCustomerEstimate.duration;
@@ -228,9 +222,8 @@ const getTaxisWithinRadius = async (email) => {
         });
 
         // Calculate average driver rating
-        const averageRating =
-          reviews.reduce((sum, review) => sum + review.driverRating, 0) /
-          (reviews.length || 1);
+        const averageRating = reviews.reduce((sum, review) => sum + review.driverRating, 0)
+          / (reviews.length || 1);
 
         const enrichedRide = {
           id: ride.id,
@@ -240,17 +233,17 @@ const getTaxisWithinRadius = async (email) => {
           pickupRadius: ride.pickupRadius,
           createDateTime: format(
             new Date(ride.createDatetime),
-            "dd-MM-yyyy HH:mm",
+            'dd-MM-yyyy HH:mm',
             {
               locale: id,
-            }
+            },
           ),
           updateDateTime: format(
             new Date(ride.updateDatetime),
-            "dd-MM-yyyy HH:mm",
+            'dd-MM-yyyy HH:mm',
             {
               locale: id,
-            }
+            },
           ),
           driverInfo: {
             id: ride.Driver.id,
@@ -259,24 +252,24 @@ const getTaxisWithinRadius = async (email) => {
             photo: ride.Driver.photo,
             lat: ride.Driver.lat,
             long: ride.Driver.long,
-            averageRating: averageRating,
+            averageRating,
           },
           distances: {
             driverToCustomerDistanceEstimate:
               formattedDistance(distanceEstimate),
             customerToAirportDistanceEstimate: formattedDistance(
-              customerToAirportEstimate.distance
+              customerToAirportEstimate.distance,
             ),
           },
           durations: {
             driverToCustomerDurationEstimate:
               formattedDuration(durationEstimate),
             customerToAirportArrivalDurationEstimate: formattedDuration(
-              durationEstimate + customerToAirportEstimate.duration
+              durationEstimate + customerToAirportEstimate.duration,
             ),
           },
           airport: airport.name,
-          estimatedCost: `Rp${roundedTravelCost.toLocaleString("id-ID")}`, // Adding estimated travel cost with Rupiah format
+          estimatedCost: `Rp${roundedTravelCost.toLocaleString('id-ID')}`, // Adding estimated travel cost with Rupiah format
         };
 
         validEnrichedRides.push(enrichedRide);
@@ -290,10 +283,10 @@ const getTaxisWithinRadius = async (email) => {
   // Sort the validEnrichedRides array by driverToCustomerDurationEstimate in ascending order
   validEnrichedRides.sort((a, b) => {
     const durationA = parseDuration(
-      a.durations.driverToCustomerDurationEstimate
+      a.durations.driverToCustomerDurationEstimate,
     );
     const durationB = parseDuration(
-      b.durations.driverToCustomerDurationEstimate
+      b.durations.driverToCustomerDurationEstimate,
     );
     return durationA - durationB;
   });
@@ -301,11 +294,11 @@ const getTaxisWithinRadius = async (email) => {
   // Helper function to parse formattedDuration back to numeric value (in seconds)
   function parseDuration(formattedDuration) {
     // Assuming formattedDuration is in "hh:mm:ss" or "mm:ss" format
-    const parts = formattedDuration.split(":").map(Number);
+    const parts = formattedDuration.split(':').map(Number);
     if (parts.length === 3) {
       // Format "hh:mm:ss"
       return parts[0] * 3600 + parts[1] * 60 + parts[2];
-    } else if (parts.length === 2) {
+    } if (parts.length === 2) {
       // Format "mm:ss"
       return parts[0] * 60 + parts[1];
     }
@@ -335,7 +328,7 @@ const addOrder = async (customerEmail, orderData) => {
   });
 
   if (!customer) {
-    throw new ResponseError(404, "Customer not found", customerEmail);
+    throw new ResponseError(404, 'Customer not found', customerEmail);
   }
 
   const existingCustomerOrders = await prismaClient.order.findMany({
@@ -351,7 +344,7 @@ const addOrder = async (customerEmail, orderData) => {
   if (
     existingCustomerOrders.some((order) => ![4, 5, 6, 7].includes(order.status))
   ) {
-    throw new ResponseError(400, "Cannot add new order: existing order.");
+    throw new ResponseError(400, 'Cannot add new order: existing order.');
   }
 
   const ride = await prismaClient.ride.findUnique({
@@ -366,11 +359,11 @@ const addOrder = async (customerEmail, orderData) => {
   });
 
   if (!ride) {
-    throw new ResponseError(404, "Ride not found", orderData.rideId);
+    throw new ResponseError(404, 'Ride not found', orderData.rideId);
   }
 
   if (ride.rideStatus == 2 || ride.rideStatus == 3) {
-    throw new ResponseError(400, "Order cannot be completed");
+    throw new ResponseError(400, 'Order cannot be completed');
   }
 
   const existingOrders = await prismaClient.order.findMany({
@@ -381,8 +374,8 @@ const addOrder = async (customerEmail, orderData) => {
   if (existingOrders.some((order) => ![5, 6, 7].includes(order.status))) {
     throw new ResponseError(
       400,
-      "Order cannot be completed due to current status",
-      customer.email
+      'Order cannot be completed due to current status',
+      customer.email,
     );
   }
 
@@ -395,7 +388,7 @@ const addOrder = async (customerEmail, orderData) => {
   });
 
   if (!airport) {
-    throw new ResponseError(404, "Airport not found");
+    throw new ResponseError(404, 'Airport not found');
   }
 
   const fare = await prismaClient.fare.findFirst({
@@ -406,14 +399,14 @@ const addOrder = async (customerEmail, orderData) => {
   });
 
   if (!fare) {
-    throw new ResponseError(404, "Fare information not found");
+    throw new ResponseError(404, 'Fare information not found');
   }
 
   const customerToAirportEstimate = await getDirections(
     customer.lat,
     customer.long,
     airport.lat,
-    airport.long
+    airport.long,
   );
 
   const driverInfo = await prismaClient.driver.findUnique({
@@ -426,34 +419,33 @@ const addOrder = async (customerEmail, orderData) => {
     },
   });
 
-  const costTravel =
-    (customerToAirportEstimate.distance / 1000) * fare.farePerKm;
+  const costTravel = (customerToAirportEstimate.distance / 1000) * fare.farePerKm;
   const roundedCostTravel = Math.round(costTravel / 1000) * 1000;
   const roundedFarePerKm = Math.round(fare.farePerKm);
 
-  const formattedFarePerKm = roundedFarePerKm.toLocaleString("id-ID", {
-    style: "currency",
-    currency: "IDR",
+  const formattedFarePerKm = roundedFarePerKm.toLocaleString('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   });
 
-  const formattedCostTravel = roundedCostTravel.toLocaleString("id-ID", {
-    style: "currency",
-    currency: "IDR",
+  const formattedCostTravel = roundedCostTravel.toLocaleString('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   });
 
   const generateOrderId = async () => {
     const lastOrder = await prismaClient.order.findFirst({
-      orderBy: { id: "desc" },
+      orderBy: { id: 'desc' },
       select: { id: true },
     });
-    const lastId = lastOrder?.id || "ORD-000000";
-    const sequenceNumber = parseInt(lastId.split("-")[1], 10) || 0;
+    const lastId = lastOrder?.id || 'ORD-000000';
+    const sequenceNumber = parseInt(lastId.split('-')[1], 10) || 0;
     const newSequenceNumber = sequenceNumber + 1;
-    return `ORD-${String(newSequenceNumber).padStart(6, "0")}`;
+    return `ORD-${String(newSequenceNumber).padStart(6, '0')}`;
   };
 
   const orderId = await generateOrderId();
@@ -480,9 +472,9 @@ const addOrder = async (customerEmail, orderData) => {
   await prismaClient.review.create({
     data: {
       customerRating: 0,
-      customerReview: "Tidak Ada Review",
+      customerReview: 'Tidak Ada Review',
       driverRating: 0,
-      driverReview: "Tidak Ada Review",
+      driverReview: 'Tidak Ada Review',
       orderId: makeOrder.id,
       customerId: customer.id,
       driverId: driverInfo.id,
@@ -491,9 +483,9 @@ const addOrder = async (customerEmail, orderData) => {
 
   await prismaClient.notification.create({
     data: {
-      title: "Notifikasi Pesanan Masuk",
-      content: `Anda memiliki pesanan taksi baru. Silakan buka aplikasi untuk informasi lebih lanjut.`,
-      recipientType: "driver",
+      title: 'Notifikasi Pesanan Masuk',
+      content: 'Anda memiliki pesanan taksi baru. Silakan buka aplikasi untuk informasi lebih lanjut.',
+      recipientType: 'driver',
       customerId: customer.id,
       driverId: driverInfo.id,
       orderId: makeOrder.id,
@@ -502,13 +494,13 @@ const addOrder = async (customerEmail, orderData) => {
 
   try {
     await sendPushNotification(
-      "Notifikasi Pesanan Masuk",
-      `Anda memiliki pesanan taksi baru. Silakan buka aplikasi untuk informasi lebih lanjut.`,
-      driverInfo.deviceToken
+      'Notifikasi Pesanan Masuk',
+      'Anda memiliki pesanan taksi baru. Silakan buka aplikasi untuk informasi lebih lanjut.',
+      driverInfo.deviceToken,
     );
-    console.log("Success to send notification");
+    console.log('Success to send notification');
   } catch (error) {
-    throw new ResponseError(500, "Failed to send notification");
+    throw new ResponseError(500, 'Failed to send notification');
   }
 
   return makeOrder;
@@ -521,28 +513,30 @@ const cancelOrder = async (customerEmail, orderId) => {
   });
 
   if (!customer) {
-    throw new ResponseError(404, "Customer not found", customerEmail);
+    throw new ResponseError(404, 'Customer not found', customerEmail);
   }
 
   const order = await prismaClient.order.findUnique({
     where: { id: orderId },
-    select: { id: true, customerId: true, status: true, rideId: true },
+    select: {
+      id: true, customerId: true, status: true, rideId: true,
+    },
   });
 
   if (!order) {
-    throw new ResponseError(404, "Order not found", orderId);
+    throw new ResponseError(404, 'Order not found', orderId);
   }
 
   if (order.customerId !== customer.id) {
     throw new ResponseError(
       403,
-      "Order does not belong to the customer",
-      orderId
+      'Order does not belong to the customer',
+      orderId,
     );
   }
 
   if ([4, 5, 6, 7].includes(order.status)) {
-    throw new ResponseError(400, "Order cannot be cancelled", orderId);
+    throw new ResponseError(400, 'Order cannot be cancelled', orderId);
   }
 
   const ride = await prismaClient.ride.findFirst({
@@ -555,7 +549,7 @@ const cancelOrder = async (customerEmail, orderId) => {
   });
 
   if (!ride) {
-    throw new ResponseError(404, "Ride not found", order.rideId);
+    throw new ResponseError(404, 'Ride not found', order.rideId);
   }
 
   const driverInfo = await prismaClient.driver.findUnique({
@@ -575,7 +569,7 @@ const cancelOrder = async (customerEmail, orderId) => {
   });
 
   if (!ride) {
-    throw new ResponseError(404, "Driver not found", ride.driverId);
+    throw new ResponseError(404, 'Driver not found', ride.driverId);
   }
 
   const cancelledOrder = await prismaClient.order.update({
@@ -586,20 +580,20 @@ const cancelOrder = async (customerEmail, orderId) => {
 
   try {
     await sendPushNotification(
-      "Notifikasi Pembatalan Pemesanan",
-      `Pemesanan Taksi Bandara telah dibatalkan oleh pelanggan. Silahkan cek halaman riwayat pemesanan untuk informasi lebih detail.`,
-      driverInfo.deviceToken
+      'Notifikasi Pembatalan Pemesanan',
+      'Pemesanan Taksi Bandara telah dibatalkan oleh pelanggan. Silahkan cek halaman riwayat pemesanan untuk informasi lebih detail.',
+      driverInfo.deviceToken,
     );
-    console.log("Success to send notification");
+    console.log('Success to send notification');
   } catch (error) {
-    throw new ResponseError(500, "Failed to send notification");
+    throw new ResponseError(500, 'Failed to send notification');
   }
 
   await prismaClient.notification.create({
     data: {
-      title: "Notifikasi Pembatalan Pemesanan",
-      content: `Pemesanan Taksi Bandara telah dibatalkan oleh pelanggan. Silahkan cek halaman riwayat pemesanan untuk informasi lebih detail.`,
-      recipientType: "driver",
+      title: 'Notifikasi Pembatalan Pemesanan',
+      content: 'Pemesanan Taksi Bandara telah dibatalkan oleh pelanggan. Silahkan cek halaman riwayat pemesanan untuk informasi lebih detail.',
+      recipientType: 'driver',
       customerId: customer.id,
       driverId: driverInfo.id,
       orderId: order.id,
@@ -618,7 +612,7 @@ const getCurrentOrder = async (customerEmail) => {
   });
 
   if (!customer) {
-    throw new ResponseError(404, "Customer not found", customerEmail);
+    throw new ResponseError(404, 'Customer not found', customerEmail);
   }
 
   const currentOrder = await prismaClient.order.findFirst({
@@ -642,7 +636,7 @@ const getCurrentOrder = async (customerEmail) => {
   });
 
   if (!currentOrder) {
-    throw new ResponseError(404, "no_current_order", customer.email);
+    throw new ResponseError(404, 'no_current_order', customer.email);
   }
 
   const ride = await prismaClient.ride.findUnique({
@@ -660,7 +654,7 @@ const getCurrentOrder = async (customerEmail) => {
   });
 
   if (!ride) {
-    throw new ResponseError(404, "Ride not found", currentOrder.rideId);
+    throw new ResponseError(404, 'Ride not found', currentOrder.rideId);
   }
 
   const driverInfo = await prismaClient.driver.findUnique({
@@ -680,7 +674,7 @@ const getCurrentOrder = async (customerEmail) => {
   });
 
   if (!driverInfo) {
-    throw new ResponseError(404, "Driver not found", ride.driverId);
+    throw new ResponseError(404, 'Driver not found', ride.driverId);
   }
 
   // Ambil semua rating dari review yang tidak bernilai 0 berdasarkan id driver
@@ -697,9 +691,8 @@ const getCurrentOrder = async (customerEmail) => {
   });
 
   // Hitung rata-rata rating driver
-  const averageRating =
-    reviews.reduce((sum, review) => sum + review.driverRating, 0) /
-    (reviews.length || 1); // Menghindari pembagian dengan 0
+  const averageRating = reviews.reduce((sum, review) => sum + review.driverRating, 0)
+    / (reviews.length || 1); // Menghindari pembagian dengan 0
 
   const airport = await prismaClient.airport.findFirst({
     select: {
@@ -710,7 +703,7 @@ const getCurrentOrder = async (customerEmail) => {
   });
 
   if (!airport) {
-    throw new ResponseError(404, "Airport not found");
+    throw new ResponseError(404, 'Airport not found');
   }
 
   let estimationDurationAndDistance;
@@ -723,14 +716,14 @@ const getCurrentOrder = async (customerEmail) => {
         driverInfo.lat,
         driverInfo.long,
         currentOrder.lat,
-        currentOrder.long
+        currentOrder.long,
       );
     } else {
       estimationDurationAndDistance = await getDirections(
         driverInfo.lat,
         driverInfo.long,
         currentOrder.lat,
-        currentOrder.long
+        currentOrder.long,
       );
     }
   } else if (currentOrder.status === 2) {
@@ -739,7 +732,7 @@ const getCurrentOrder = async (customerEmail) => {
       driverInfo.lat,
       driverInfo.long,
       currentOrder.lat,
-      currentOrder.long
+      currentOrder.long,
     );
   } else if (currentOrder.status === 3) {
     // Calculate from driver to airport
@@ -747,7 +740,7 @@ const getCurrentOrder = async (customerEmail) => {
       driverInfo.lat,
       driverInfo.long,
       airport.lat,
-      airport.long
+      airport.long,
     );
   } else {
     // Set to 0 for other statuses
@@ -770,10 +763,10 @@ const getCurrentOrder = async (customerEmail) => {
       averageRating: parseFloat(averageRating.toFixed(2)),
     },
     estimationDuration: formattedDuration(
-      estimationDurationAndDistance.duration
+      estimationDurationAndDistance.duration,
     ),
     estimationDistance: formattedDistance(
-      estimationDurationAndDistance.distance
+      estimationDurationAndDistance.distance,
     ),
     rideInfo: ride,
   };
@@ -786,7 +779,7 @@ const getHistoryOrder = async (customerEmail) => {
   });
 
   if (!customer) {
-    throw new ResponseError(404, "Customer not found", customerEmail);
+    throw new ResponseError(404, 'Customer not found', customerEmail);
   }
 
   const orders = await prismaClient.order.findMany({
@@ -850,13 +843,13 @@ const getHistoryOrder = async (customerEmail) => {
   const formattedOrders = orders.map((order) => ({
     ...order,
     review: reviewMap[order.id] || {
-      driverReview: "Tidak Ada Review",
+      driverReview: 'Tidak Ada Review',
       driverRating: 0,
     },
-    createDatetime: format(new Date(order.createDatetime), "dd-MM-yyyy HH:mm", {
+    createDatetime: format(new Date(order.createDatetime), 'dd-MM-yyyy HH:mm', {
       locale: id,
     }),
-    updateDatetime: format(new Date(order.updateDatetime), "dd-MM-yyyy HH:mm", {
+    updateDatetime: format(new Date(order.updateDatetime), 'dd-MM-yyyy HH:mm', {
       locale: id,
     }),
   }));
@@ -872,7 +865,7 @@ const sendMessage = async (customerEmail, orderId, message) => {
   });
 
   if (!customer) {
-    throw new ResponseError(404, "Customer not found", customerEmail);
+    throw new ResponseError(404, 'Customer not found', customerEmail);
   }
 
   // Cari order berdasarkan orderId
@@ -882,7 +875,7 @@ const sendMessage = async (customerEmail, orderId, message) => {
   });
 
   if (!order) {
-    throw new ResponseError(404, "Order not found", orderId);
+    throw new ResponseError(404, 'Order not found', orderId);
   }
 
   // Cari driver berdasarkan driverId dari order
@@ -892,32 +885,32 @@ const sendMessage = async (customerEmail, orderId, message) => {
   });
 
   if (!driver) {
-    throw new ResponseError(404, "Driver not found", order.driverId);
+    throw new ResponseError(404, 'Driver not found', order.driverId);
   }
 
   // Kirim notifikasi push ke driver
   try {
-    let notificationTitle = "Pesan dari Customer";
-    let notificationMessage = message;
+    const notificationTitle = 'Pesan dari Customer';
+    const notificationMessage = message;
 
     if (driver && driver.deviceToken) {
       await sendPushNotification(
         notificationTitle,
         notificationMessage,
-        driver.deviceToken
+        driver.deviceToken,
       );
-      console.log("Success to send notification");
+      console.log('Success to send notification');
     }
   } catch (error) {
-    console.error("Error sending notification: ", error);
-    throw new ResponseError(500, "Failed to send notification");
+    console.error('Error sending notification: ', error);
+    throw new ResponseError(500, 'Failed to send notification');
   }
 
   // Buat pesan di tabel Message
   await prismaClient.message.create({
     data: {
       content: message,
-      senderType: "customer",
+      senderType: 'customer',
       customerId: customer.id,
       driverId: driver.id,
       orderId: order.id,
@@ -927,9 +920,9 @@ const sendMessage = async (customerEmail, orderId, message) => {
   // Buat notifikasi di tabel Notification
   await prismaClient.notification.create({
     data: {
-      title: "Pesan dari Customer",
+      title: 'Pesan dari Customer',
       content: message,
-      recipientType: "driver",
+      recipientType: 'driver',
       customerId: customer.id,
       driverId: driver.id,
       orderId: order.id,
@@ -946,7 +939,7 @@ const sendReport = async (customerEmail, orderId, message) => {
   });
 
   if (!customer) {
-    throw new ResponseError(404, "Customer not found", driverEmail);
+    throw new ResponseError(404, 'Customer not found', driverEmail);
   }
 
   const order = await prismaClient.order.findUnique({
@@ -955,7 +948,7 @@ const sendReport = async (customerEmail, orderId, message) => {
   });
 
   if (!order) {
-    throw new ResponseError(404, "Order not found", orderId);
+    throw new ResponseError(404, 'Order not found', orderId);
   }
 
   const driver = await prismaClient.driver.findUnique({
@@ -964,7 +957,7 @@ const sendReport = async (customerEmail, orderId, message) => {
   });
 
   if (!driver) {
-    throw new ResponseError(404, "Driver not found", order.driverId);
+    throw new ResponseError(404, 'Driver not found', order.driverId);
   }
 
   try {
@@ -972,18 +965,18 @@ const sendReport = async (customerEmail, orderId, message) => {
       customer.email,
       customer.name,
       order.id,
-      message
+      message,
     );
-    console.log("Email sent successfully.");
+    console.log('Email sent successfully.');
   } catch (error) {
-    console.error("Error sending email:", error);
-    throw new ResponseError(500, "Internal Server Error");
+    console.error('Error sending email:', error);
+    throw new ResponseError(500, 'Internal Server Error');
   }
 
   await prismaClient.report.create({
     data: {
       content: message,
-      senderType: "customer",
+      senderType: 'customer',
       customerId: customer.id,
       driverId: driver.id,
       orderId: order.id,
@@ -1000,7 +993,7 @@ const sendReview = async (customerEmail, orderId, rating, review) => {
   });
 
   if (!customer) {
-    throw new ResponseError(404, "Customer not found", customerEmail);
+    throw new ResponseError(404, 'Customer not found', customerEmail);
   }
 
   const order = await prismaClient.order.findUnique({
@@ -1009,7 +1002,7 @@ const sendReview = async (customerEmail, orderId, rating, review) => {
   });
 
   if (!order) {
-    throw new ResponseError(404, "Order not found", orderId);
+    throw new ResponseError(404, 'Order not found', orderId);
   }
 
   const existingReview = await prismaClient.review.findFirst({
@@ -1022,7 +1015,7 @@ const sendReview = async (customerEmail, orderId, rating, review) => {
   });
 
   if (!existingReview) {
-    throw new ResponseError(404, "Existing Review not found", orderId);
+    throw new ResponseError(404, 'Existing Review not found', orderId);
   }
 
   await prismaClient.review.update({
@@ -1031,7 +1024,7 @@ const sendReview = async (customerEmail, orderId, rating, review) => {
     },
     data: {
       customerRating: rating,
-      customerReview: review?.trim() || "Tidak Ada Review",
+      customerReview: review?.trim() || 'Tidak Ada Review',
     },
   });
 

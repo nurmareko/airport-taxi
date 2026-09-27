@@ -1,14 +1,14 @@
-import admin from "firebase-admin";
-import { readFileSync } from "fs";
+import admin from 'firebase-admin';
+import { readFileSync } from 'fs';
 
 // Membaca dan menginisialisasi Firebase Admin SDK
 const serviceAccount = JSON.parse(
-  readFileSync("./src/config/push-notification-key.json")
+  readFileSync('./src/config/push-notification-key.json'),
 );
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  projectId: "airport-taxi-sharing-ce9e9",
+  projectId: 'airport-taxi-sharing-ce9e9',
 });
 
 /**
@@ -22,7 +22,7 @@ admin.initializeApp({
 const sendPushNotification = async (title, body, token, data = {}) => {
   // Konversi semua nilai dalam data menjadi string
   const stringifiedData = Object.fromEntries(
-    Object.entries(data).map(([key, value]) => [key, String(value)])
+    Object.entries(data).map(([key, value]) => [key, String(value)]),
   );
 
   const message = {
@@ -34,13 +34,13 @@ const sendPushNotification = async (title, body, token, data = {}) => {
     data: stringifiedData,
   };
 
-  console.log("Sending message with payload:", JSON.stringify(message, null, 2)); // Logging payload data
+  console.log('Sending message with payload:', JSON.stringify(message, null, 2)); // Logging payload data
 
   try {
     const response = await admin.messaging().send(message);
-    console.log("Successfully sent message:", response);
+    console.log('Successfully sent message:', response);
   } catch (error) {
-    console.error("Error sending message:", error);
+    console.error('Error sending message:', error);
   }
 };
 

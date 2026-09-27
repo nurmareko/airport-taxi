@@ -1,13 +1,13 @@
-import { prismaClient } from "../application/database.js";
+import { prismaClient } from '../application/database.js';
 
 export const authMiddleware = async (req, res, next) => {
-  const token = req.get("Authorization");
+  const token = req.get('Authorization');
 
   if (!token) {
     return res.status(401).json({
       error: {
         status: 401,
-        message: "Unauthorized",
+        message: 'Unauthorized',
         additionalData: null,
       },
     });
@@ -16,7 +16,7 @@ export const authMiddleware = async (req, res, next) => {
   // Cek apakah token valid untuk pelanggan
   const customer = await prismaClient.customer.findFirst({
     where: {
-      token: token,
+      token,
     },
   });
 
@@ -34,7 +34,7 @@ export const authMiddleware = async (req, res, next) => {
       return res.status(401).json({
         error: {
           status: 401,
-          message: "Unauthorized",
+          message: 'Unauthorized',
           additionalData: null,
         },
       });
@@ -59,7 +59,7 @@ export const authMiddleware = async (req, res, next) => {
   // Cek apakah token valid untuk pengemudi
   const driver = await prismaClient.driver.findFirst({
     where: {
-      token: token,
+      token,
     },
   });
 
@@ -77,7 +77,7 @@ export const authMiddleware = async (req, res, next) => {
       return res.status(401).json({
         error: {
           status: 401,
-          message: "Unauthorized",
+          message: 'Unauthorized',
           additionalData: null,
         },
       });
@@ -101,7 +101,7 @@ export const authMiddleware = async (req, res, next) => {
   // Cek apakah token valid untuk admin
   const admin = await prismaClient.admin.findFirst({
     where: {
-      token: token,
+      token,
     },
   });
 
@@ -110,7 +110,7 @@ export const authMiddleware = async (req, res, next) => {
       return res.status(401).json({
         error: {
           status: 401,
-          message: "Unauthorized",
+          message: 'Unauthorized',
           additionalData: null,
         },
       });
@@ -125,7 +125,7 @@ export const authMiddleware = async (req, res, next) => {
   return res.status(401).json({
     error: {
       status: 401,
-      message: "Unauthorized",
+      message: 'Unauthorized',
       additionalData: null,
     },
   });

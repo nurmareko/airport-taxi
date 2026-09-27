@@ -1,4 +1,4 @@
-import Joi from "joi";
+import Joi from 'joi';
 
 const loginAdminValidation = Joi.object({
   email: Joi.string().email().required(),

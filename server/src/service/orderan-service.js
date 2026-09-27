@@ -1,9 +1,9 @@
-import { prismaClient } from "../application/database.js";
-import { ResponseError } from "../error/response-error.js";
-import sendPushNotification from "../utils/sendPushNotification.js";
-import { id } from "date-fns/locale";
-import { format } from "date-fns";
-import { sendDriverReportEmail } from "../utils/sendEmailReport.js";
+import { id } from 'date-fns/locale';
+import { format } from 'date-fns';
+import { prismaClient } from '../application/database.js';
+import { ResponseError } from '../error/response-error.js';
+import sendPushNotification from '../utils/sendPushNotification.js';
+import { sendDriverReportEmail } from '../utils/sendEmailReport.js';
 
 const getCurrentOrderan = async (driverEmail) => {
   const driver = await prismaClient.driver.findUnique({
@@ -14,7 +14,7 @@ const getCurrentOrderan = async (driverEmail) => {
   });
 
   if (!driver) {
-    throw new ResponseError(404, "Driver not found", driverEmail);
+    throw new ResponseError(404, 'Driver not found', driverEmail);
   }
 
   const currentOrderan = await prismaClient.order.findFirst({
@@ -39,7 +39,7 @@ const getCurrentOrderan = async (driverEmail) => {
   });
 
   if (!currentOrderan) {
-    throw new ResponseError(404, "no_current_orderan", driver.email);
+    throw new ResponseError(404, 'no_current_orderan', driver.email);
   }
 
   const customerInfo = await prismaClient.customer.findUnique({
@@ -58,8 +58,8 @@ const getCurrentOrderan = async (driverEmail) => {
   if (!customerInfo) {
     throw new ResponseError(
       404,
-      "Customer not found",
-      currentOrderan.customerId
+      'Customer not found',
+      currentOrderan.customerId,
     );
   }
 
@@ -77,9 +77,8 @@ const getCurrentOrderan = async (driverEmail) => {
   });
 
   // Hitung rata-rata rating customer
-  const averageRating =
-    reviews.reduce((sum, review) => sum + review.customerRating, 0) /
-    (reviews.length || 1); // Menghindari pembagian dengan 0
+  const averageRating = reviews.reduce((sum, review) => sum + review.customerRating, 0)
+    / (reviews.length || 1); // Menghindari pembagian dengan 0
 
   const rideInfo = await prismaClient.ride.findUnique({
     where: {
@@ -96,7 +95,7 @@ const getCurrentOrderan = async (driverEmail) => {
   });
 
   if (!rideInfo) {
-    throw new ResponseError(404, "Ride not found", currentOrderan.rideId);
+    throw new ResponseError(404, 'Ride not found', currentOrderan.rideId);
   }
 
   // Tambahkan averageRating ke dalam customerInfo
@@ -112,7 +111,7 @@ const rejectOrderan = async (driverEmail, orderId) => {
   });
 
   if (!driver) {
-    throw new ResponseError(404, "Driver not found", driverEmail);
+    throw new ResponseError(404, 'Driver not found', driverEmail);
   }
 
   const order = await prismaClient.order.findUnique({
@@ -121,11 +120,11 @@ const rejectOrderan = async (driverEmail, orderId) => {
   });
 
   if (!order) {
-    throw new ResponseError(404, "Order not found", orderId);
+    throw new ResponseError(404, 'Order not found', orderId);
   }
 
   if (order.status !== 0) {
-    throw new ResponseError(400, "Order cannot be rejected", order.id);
+    throw new ResponseError(400, 'Order cannot be rejected', order.id);
   }
 
   const customer = await prismaClient.customer.findUnique({
@@ -134,7 +133,7 @@ const rejectOrderan = async (driverEmail, orderId) => {
   });
 
   if (!customer) {
-    throw new ResponseError(404, "Customer not found", order.customerId);
+    throw new ResponseError(404, 'Customer not found', order.customerId);
   }
 
   const rejectedOrderan = await prismaClient.order.update({
@@ -145,14 +144,14 @@ const rejectOrderan = async (driverEmail, orderId) => {
 
   try {
     await sendPushNotification(
-      "Pesanan Taxi Anda Ditolak oleh Driver",
-      "Pesanan Taxi Anda telah ditolak oleh Driver. Silakan mencari Driver lain yang tersedia. Terima kasih telah menggunakan layanan kami!",
-      customer.deviceToken
+      'Pesanan Taxi Anda Ditolak oleh Driver',
+      'Pesanan Taxi Anda telah ditolak oleh Driver. Silakan mencari Driver lain yang tersedia. Terima kasih telah menggunakan layanan kami!',
+      customer.deviceToken,
     );
-    console.log("Success to send notification");
+    console.log('Success to send notification');
   } catch (error) {
-    console.error("Error sending notification: ", error);
-    throw new ResponseError(500, "Failed to send notification");
+    console.error('Error sending notification: ', error);
+    throw new ResponseError(500, 'Failed to send notification');
   }
 
   return rejectedOrderan;
@@ -165,7 +164,7 @@ const acceptOrderan = async (driverEmail, orderId) => {
   });
 
   if (!driver) {
-    throw new ResponseError(404, "Driver not found", driverEmail);
+    throw new ResponseError(404, 'Driver not found', driverEmail);
   }
 
   const order = await prismaClient.order.findUnique({
@@ -174,11 +173,11 @@ const acceptOrderan = async (driverEmail, orderId) => {
   });
 
   if (!order) {
-    throw new ResponseError(404, "Order not found", orderId);
+    throw new ResponseError(404, 'Order not found', orderId);
   }
 
   if (order.status !== 0) {
-    throw new ResponseError(400, "Order cannot be accepted", orderId);
+    throw new ResponseError(400, 'Order cannot be accepted', orderId);
   }
 
   const customer = await prismaClient.customer.findUnique({
@@ -187,7 +186,7 @@ const acceptOrderan = async (driverEmail, orderId) => {
   });
 
   if (!customer) {
-    throw new ResponseError(404, "Customer not found", order.customerId);
+    throw new ResponseError(404, 'Customer not found', order.customerId);
   }
 
   const acceptedOrderan = await prismaClient.order.update({
@@ -198,14 +197,14 @@ const acceptOrderan = async (driverEmail, orderId) => {
 
   try {
     await sendPushNotification(
-      "Pesanan Taxi Anda Diterima oleh Driver",
-      "Pesanan Taxi Anda telah diterima oleh driver. Silahkan pergi ke halaman pesanan untuk melihat informasi detail dan pembaruan informasi pemesanan.",
-      customer.deviceToken
+      'Pesanan Taxi Anda Diterima oleh Driver',
+      'Pesanan Taxi Anda telah diterima oleh driver. Silahkan pergi ke halaman pesanan untuk melihat informasi detail dan pembaruan informasi pemesanan.',
+      customer.deviceToken,
     );
-    console.log("Success to send notification");
+    console.log('Success to send notification');
   } catch (error) {
-    console.error("Error sending notification: ", error);
-    throw new ResponseError(500, "Failed to send notification");
+    console.error('Error sending notification: ', error);
+    throw new ResponseError(500, 'Failed to send notification');
   }
 
   return acceptedOrderan;
@@ -218,7 +217,7 @@ const cancelOrderan = async (driverEmail, orderId) => {
   });
 
   if (!driver) {
-    throw new ResponseError(404, "Driver not found", driverEmail);
+    throw new ResponseError(404, 'Driver not found', driverEmail);
   }
 
   const order = await prismaClient.order.findUnique({
@@ -227,11 +226,11 @@ const cancelOrderan = async (driverEmail, orderId) => {
   });
 
   if (!order) {
-    throw new ResponseError(404, "Order not found", orderId);
+    throw new ResponseError(404, 'Order not found', orderId);
   }
 
   if (![1, 2, 3].includes(order.status)) {
-    throw new ResponseError(400, "Order cannot be cancelled", orderId);
+    throw new ResponseError(400, 'Order cannot be cancelled', orderId);
   }
 
   const customer = await prismaClient.customer.findUnique({
@@ -240,7 +239,7 @@ const cancelOrderan = async (driverEmail, orderId) => {
   });
 
   if (!customer) {
-    throw new ResponseError(404, "Customer not found", order.customerId);
+    throw new ResponseError(404, 'Customer not found', order.customerId);
   }
 
   const cancelledOrderan = await prismaClient.order.update({
@@ -251,14 +250,14 @@ const cancelOrderan = async (driverEmail, orderId) => {
 
   try {
     await sendPushNotification(
-      "Pesanan Taxi Anda Dibatalkan oleh Driver",
-      "Pesanan Taxi Anda telah dibatalkan oleh Driver. Silahkan cek halaman riwayat untuk informasi lebih detail. ",
-      customer.deviceToken
+      'Pesanan Taxi Anda Dibatalkan oleh Driver',
+      'Pesanan Taxi Anda telah dibatalkan oleh Driver. Silahkan cek halaman riwayat untuk informasi lebih detail. ',
+      customer.deviceToken,
     );
-    console.log("Success to send notification");
+    console.log('Success to send notification');
   } catch (error) {
-    console.error("Error sending notification: ", error);
-    throw new ResponseError(500, "Failed to send notification");
+    console.error('Error sending notification: ', error);
+    throw new ResponseError(500, 'Failed to send notification');
   }
 
   return cancelledOrderan;
@@ -273,7 +272,7 @@ const getHistoryOrderan = async (driverEmail) => {
   });
 
   if (!driver) {
-    throw new ResponseError(404, "Driver not found", driverEmail);
+    throw new ResponseError(404, 'Driver not found', driverEmail);
   }
 
   const orders = await prismaClient.order.findMany({
@@ -335,13 +334,13 @@ const getHistoryOrderan = async (driverEmail) => {
   const formattedOrders = orders.map((order) => ({
     ...order,
     review: reviewMap[order.id] || {
-      customerReview: "Tidak Ada Review",
+      customerReview: 'Tidak Ada Review',
       customerRating: 0,
     },
-    createDatetime: format(new Date(order.createDatetime), "dd-MM-yyyy HH:mm", {
+    createDatetime: format(new Date(order.createDatetime), 'dd-MM-yyyy HH:mm', {
       locale: id,
     }),
-    updateDatetime: format(new Date(order.updateDatetime), "dd-MM-yyyy HH:mm", {
+    updateDatetime: format(new Date(order.updateDatetime), 'dd-MM-yyyy HH:mm', {
       locale: id,
     }),
   }));
@@ -356,7 +355,7 @@ const updateStatusOrderan = async (driverEmail, orderId, orderStatus) => {
   });
 
   if (!driver) {
-    throw new ResponseError(404, "Driver not found", driverEmail);
+    throw new ResponseError(404, 'Driver not found', driverEmail);
   }
 
   const order = await prismaClient.order.findUnique({
@@ -365,15 +364,15 @@ const updateStatusOrderan = async (driverEmail, orderId, orderStatus) => {
   });
 
   if (!order) {
-    throw new ResponseError(404, "Order not found", orderId);
+    throw new ResponseError(404, 'Order not found', orderId);
   }
 
   // Cek jika status orderan adalah 1, 2, atau 3
   if (![1, 2, 3].includes(order.status)) {
     throw new ResponseError(
       400,
-      "Order cannot be updated due to its current status",
-      orderId
+      'Order cannot be updated due to its current status',
+      orderId,
     );
   }
 
@@ -384,19 +383,18 @@ const updateStatusOrderan = async (driverEmail, orderId, orderStatus) => {
   });
 
   try {
-    let notificationTitle = "";
-    let notificationMessage = "";
+    let notificationTitle = '';
+    let notificationMessage = '';
 
     if (orderStatus === 2) {
-      notificationTitle = "Driver sedang menjemput penumpang";
-      notificationMessage = "Driver sedang dalam perjalanan menjemput Anda.";
+      notificationTitle = 'Driver sedang menjemput penumpang';
+      notificationMessage = 'Driver sedang dalam perjalanan menjemput Anda.';
     } else if (orderStatus === 3) {
-      notificationTitle = "Driver menuju bandara";
-      notificationMessage = "Driver sedang dalam perjalanan menuju bandara.";
+      notificationTitle = 'Driver menuju bandara';
+      notificationMessage = 'Driver sedang dalam perjalanan menuju bandara.';
     } else if (orderStatus === 4) {
-      notificationTitle = "Perjalanan selesai";
-      notificationMessage =
-        "Perjalanan Anda telah selesai. Terima kasih telah menggunakan layanan kami.";
+      notificationTitle = 'Perjalanan selesai';
+      notificationMessage = 'Perjalanan Anda telah selesai. Terima kasih telah menggunakan layanan kami.';
 
       // await prismaClient.review.create({
       //   data: {
@@ -411,12 +409,12 @@ const updateStatusOrderan = async (driverEmail, orderId, orderStatus) => {
       // Kirim notifikasi ke driver
       if (driver.deviceToken) {
         await sendPushNotification(
-          "Perjalanan selesai",
-          "Perjalanan Anda telah selesai, silahkan cek halaman riwayat untuk melihat informasi detail.",
+          'Perjalanan selesai',
+          'Perjalanan Anda telah selesai, silahkan cek halaman riwayat untuk melihat informasi detail.',
           driver.deviceToken,
-          { orderId }
+          { orderId },
         );
-        console.log("Success to send notification to driver");
+        console.log('Success to send notification to driver');
       }
     }
 
@@ -425,20 +423,20 @@ const updateStatusOrderan = async (driverEmail, orderId, orderStatus) => {
       select: { deviceToken: true },
     });
 
-    let estimatedCost = updatedOrderan.cost;
+    const estimatedCost = updatedOrderan.cost;
 
     if (customer && customer.deviceToken) {
       await sendPushNotification(
         notificationTitle,
         notificationMessage,
         customer.deviceToken,
-        { orderId, estimatedCost }
+        { orderId, estimatedCost },
       );
-      console.log("Success to send notification to customer");
+      console.log('Success to send notification to customer');
     }
   } catch (error) {
-    console.error("Error sending notification: ", error);
-    throw new ResponseError(500, "Failed to send notification");
+    console.error('Error sending notification: ', error);
+    throw new ResponseError(500, 'Failed to send notification');
   }
 
   return updatedOrderan;
@@ -451,7 +449,7 @@ const updateLocationOrderan = async (driverEmail, requestData) => {
   });
 
   if (!driver) {
-    throw new ResponseError(404, "Driver not found", driverEmail);
+    throw new ResponseError(404, 'Driver not found', driverEmail);
   }
 
   const updatedDriverPosition = await prismaClient.driver.update({
@@ -468,17 +466,15 @@ const updateLocationOrderan = async (driverEmail, requestData) => {
     select: { id: true, customerId: true, status: true },
   });
 
-  const ordersToNotify = orders.filter((order) =>
-    [1, 2, 3].includes(order.status)
-  );
+  const ordersToNotify = orders.filter((order) => [1, 2, 3].includes(order.status));
 
   if (ordersToNotify.length > 0) {
     try {
-      const notificationTitle = "update-latlng";
+      const notificationTitle = 'update-latlng';
       const notificationMessage = `${requestData.latitude}, ${requestData.latitude}`;
 
-      let driverLat = requestData.latitude;
-      let driverLong = requestData.longitude;
+      const driverLat = requestData.latitude;
+      const driverLong = requestData.longitude;
 
       for (const order of ordersToNotify) {
         const customer = await prismaClient.customer.findUnique({
@@ -491,14 +487,14 @@ const updateLocationOrderan = async (driverEmail, requestData) => {
             notificationTitle,
             notificationMessage,
             customer.deviceToken,
-            { driverLat, driverLong }
+            { driverLat, driverLong },
           );
           console.log(`Notification sent for order ${order.id}`);
         }
       }
     } catch (error) {
-      console.error("Error sending notifications: ", error);
-      throw new ResponseError(500, "Failed to send notifications");
+      console.error('Error sending notifications: ', error);
+      throw new ResponseError(500, 'Failed to send notifications');
     }
   }
 
@@ -512,7 +508,7 @@ const sendMessage = async (driverEmail, orderId, message) => {
   });
 
   if (!driver) {
-    throw new ResponseError(404, "Driver not found", driverEmail);
+    throw new ResponseError(404, 'Driver not found', driverEmail);
   }
 
   const order = await prismaClient.order.findUnique({
@@ -521,7 +517,7 @@ const sendMessage = async (driverEmail, orderId, message) => {
   });
 
   if (!order) {
-    throw new ResponseError(404, "Order not found", orderId);
+    throw new ResponseError(404, 'Order not found', orderId);
   }
 
   const customer = await prismaClient.customer.findUnique({
@@ -530,24 +526,24 @@ const sendMessage = async (driverEmail, orderId, message) => {
   });
 
   if (!customer) {
-    throw new ResponseError(404, "Customer not found", order.customerId);
+    throw new ResponseError(404, 'Customer not found', order.customerId);
   }
 
   try {
-    let notificationTitle = "Pesan dari Driver";
-    let notificationMessage = message;
+    const notificationTitle = 'Pesan dari Driver';
+    const notificationMessage = message;
 
     if (customer && customer.deviceToken) {
       await sendPushNotification(
         notificationTitle,
         notificationMessage,
-        customer.deviceToken
+        customer.deviceToken,
       );
-      console.log("Success to send notification");
+      console.log('Success to send notification');
     }
   } catch (error) {
-    console.error("Error sending notification: ", error);
-    throw new ResponseError(500, "Failed to send notification");
+    console.error('Error sending notification: ', error);
+    throw new ResponseError(500, 'Failed to send notification');
   }
   return driver;
 };
@@ -559,7 +555,7 @@ const sendReport = async (driverEmail, orderId, message) => {
   });
 
   if (!driver) {
-    throw new ResponseError(404, "Driver not found", driverEmail);
+    throw new ResponseError(404, 'Driver not found', driverEmail);
   }
 
   const order = await prismaClient.order.findUnique({
@@ -568,7 +564,7 @@ const sendReport = async (driverEmail, orderId, message) => {
   });
 
   if (!order) {
-    throw new ResponseError(404, "Order not found", orderId);
+    throw new ResponseError(404, 'Order not found', orderId);
   }
 
   const customer = await prismaClient.customer.findUnique({
@@ -577,15 +573,15 @@ const sendReport = async (driverEmail, orderId, message) => {
   });
 
   if (!customer) {
-    throw new ResponseError(404, "Customer not found", order.customerId);
+    throw new ResponseError(404, 'Customer not found', order.customerId);
   }
 
   try {
     await sendDriverReportEmail(driver.email, driver.name, order.id, message);
-    console.log("Email sent successfully.");
+    console.log('Email sent successfully.');
   } catch (error) {
-    console.error("Error sending email:", error);
-    throw new ResponseError(500, "Internal Server Error");
+    console.error('Error sending email:', error);
+    throw new ResponseError(500, 'Internal Server Error');
   }
 
   return { id: driver.id };
@@ -598,7 +594,7 @@ const sendReview = async (driverEmail, orderId, rating, review) => {
   });
 
   if (!driver) {
-    throw new ResponseError(404, "Driver not found", driverEmail);
+    throw new ResponseError(404, 'Driver not found', driverEmail);
   }
 
   const order = await prismaClient.order.findUnique({
@@ -607,14 +603,14 @@ const sendReview = async (driverEmail, orderId, rating, review) => {
   });
 
   if (!order) {
-    throw new ResponseError(404, "Order not found", orderId);
+    throw new ResponseError(404, 'Order not found', orderId);
   }
 
   if (order.driverId !== driver.id) {
     throw new ResponseError(
       403,
-      "Driver not associated with this order",
-      orderId
+      'Driver not associated with this order',
+      orderId,
     );
   }
 
@@ -628,7 +624,7 @@ const sendReview = async (driverEmail, orderId, rating, review) => {
   });
 
   if (!existingReview) {
-    throw new ResponseError(404, "Existing Review not found", orderId);
+    throw new ResponseError(404, 'Existing Review not found', orderId);
   }
 
   await prismaClient.review.update({
@@ -637,7 +633,7 @@ const sendReview = async (driverEmail, orderId, rating, review) => {
     },
     data: {
       driverRating: rating,
-      driverReview: review?.trim() || "Tidak Ada Review",
+      driverReview: review?.trim() || 'Tidak Ada Review',
     },
   });
 

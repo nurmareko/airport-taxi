@@ -1,12 +1,12 @@
 // get taxi based on customer's current position
 
-import orderService from "../service/order-service.js";
+import orderService from '../service/order-service.js';
 
 // customer part
 
 const getTaxisWithinRadius = async (req, res, next) => {
   try {
-    const email = req.customer.email;
+    const { email } = req.customer;
     const result = await orderService.getTaxisWithinRadius(email);
 
     res.status(200).json({
@@ -19,7 +19,7 @@ const getTaxisWithinRadius = async (req, res, next) => {
 
 const getCurrentOrder = async (req, res, next) => {
   try {
-    const email = req.customer.email;
+    const { email } = req.customer;
     const result = await orderService.getCurrentOrder(email);
 
     res.status(200).json({
@@ -32,7 +32,7 @@ const getCurrentOrder = async (req, res, next) => {
 
 const addOrder = async (req, res, next) => {
   try {
-    const email = req.customer.email;
+    const { email } = req.customer;
     const orderData = req.body;
     const result = await orderService.addOrder(email, orderData);
     res.status(200).json({
@@ -45,8 +45,8 @@ const addOrder = async (req, res, next) => {
 
 const cancelOrder = async (req, res, next) => {
   try {
-    const email = req.customer.email;
-    const orderId = req.body.orderId;
+    const { email } = req.customer;
+    const { orderId } = req.body;
     const result = await orderService.cancelOrder(email, orderId);
     res.status(200).json({
       data: result,
@@ -58,7 +58,7 @@ const cancelOrder = async (req, res, next) => {
 
 const getHistoryOrder = async (req, res, next) => {
   try {
-    const email = req.customer.email;
+    const { email } = req.customer;
     const result = await orderService.getHistoryOrder(email);
 
     res.status(200).json({
@@ -71,9 +71,9 @@ const getHistoryOrder = async (req, res, next) => {
 
 const sendMessage = async (req, res, next) => {
   try {
-    const email = req.customer.email;
-    const orderId = req.body.orderId;
-    const message = req.body.message;
+    const { email } = req.customer;
+    const { orderId } = req.body;
+    const { message } = req.body;
 
     const result = await orderService.sendMessage(email, orderId, message);
 
@@ -87,9 +87,9 @@ const sendMessage = async (req, res, next) => {
 
 const sendReport = async (req, res, next) => {
   try {
-    const email = req.customer.email;
-    const orderId = req.body.orderId;
-    const message = req.body.message;
+    const { email } = req.customer;
+    const { orderId } = req.body;
+    const { message } = req.body;
 
     const result = await orderService.sendReport(email, orderId, message);
 
@@ -103,16 +103,16 @@ const sendReport = async (req, res, next) => {
 
 const sendReview = async (req, res, next) => {
   try {
-    const email = req.customer.email;
-    const orderId = req.body.orderId;
-    const rating = req.body.rating;
-    const review = req.body.review;
+    const { email } = req.customer;
+    const { orderId } = req.body;
+    const { rating } = req.body;
+    const { review } = req.body;
 
     const result = await orderService.sendReview(
       email,
       orderId,
       rating,
-      review
+      review,
     );
 
     res.status(200).json({

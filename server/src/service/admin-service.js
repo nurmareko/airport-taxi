@@ -1,17 +1,16 @@
-import { validate } from "../validation/validation.js";
-import { loginAdminValidation } from "../validation/admin-validation.js";
-import { prismaClient } from "../application/database.js";
-import { ResponseError } from "../error/response-error.js";
+import { v4 as uuid } from 'uuid';
+import { format } from 'date-fns';
+import { id } from 'date-fns/locale';
+import { validate } from '../validation/validation.js';
+import { loginAdminValidation } from '../validation/admin-validation.js';
+import { prismaClient } from '../application/database.js';
+import { ResponseError } from '../error/response-error.js';
 import {
   sendDriverAccountActivationEmail,
   sendDriverAccountDeactivationEmail,
   sendCustomerAccountDeactivationEmail,
   sendCustomerAccountActivationEmail,
-} from "../utils/sendEmailAccountStatus.js";
-import { v4 as uuid } from "uuid";
-
-import { format } from "date-fns";
-import { id } from "date-fns/locale";
+} from '../utils/sendEmailAccountStatus.js';
 
 const login = async (request) => {
   const loginRequest = validate(loginAdminValidation, request);
@@ -23,7 +22,7 @@ const login = async (request) => {
   });
 
   if (!admin || admin.password !== loginRequest.password) {
-    throw new ResponseError(401, "Kredensial tidak valid", loginRequest.email);
+    throw new ResponseError(401, 'Kredensial tidak valid', loginRequest.email);
   }
 
   const token = uuid().toString();
@@ -32,8 +31,8 @@ const login = async (request) => {
 
   return prismaClient.admin.update({
     data: {
-      token: token,
-      tokenExpiry: tokenExpiry,
+      token,
+      tokenExpiry,
     },
     where: {
       email: admin.email,
@@ -47,7 +46,7 @@ const login = async (request) => {
 const getCurrent = async (email) => {
   const admin = await prismaClient.admin.findFirst({
     where: {
-      email: email,
+      email,
     },
     select: {
       id: true,
@@ -60,7 +59,7 @@ const getCurrent = async (email) => {
   });
 
   if (!admin) {
-    throw new ResponseError(404, "Admin not found");
+    throw new ResponseError(404, 'Admin not found');
   }
 
   return admin;
@@ -111,10 +110,10 @@ const getFare = async () => {
   });
 
   if (fare) {
-    fare.createDatetime = format(new Date(fare.createDatetime), "PPPP p", {
+    fare.createDatetime = format(new Date(fare.createDatetime), 'PPPP p', {
       locale: id,
     });
-    fare.updateDatetime = format(new Date(fare.updateDatetime), "PPPP p", {
+    fare.updateDatetime = format(new Date(fare.updateDatetime), 'PPPP p', {
       locale: id,
     });
   }
@@ -125,7 +124,7 @@ const getFare = async () => {
 const updateFare = async (email, fareId, farePerKm) => {
   const admin = await prismaClient.admin.findUnique({
     where: {
-      email: email,
+      email,
     },
     select: {
       id: true,
@@ -147,7 +146,7 @@ const updateFare = async (email, fareId, farePerKm) => {
       id: fareId,
     },
     data: {
-      farePerKm: farePerKm,
+      farePerKm,
       adminId: admin.id,
     },
     select: {
@@ -166,11 +165,11 @@ const activateDriverAccount = async (driverId) => {
   });
 
   if (!driver) {
-    throw new ResponseError(404, "Driver not found");
+    throw new ResponseError(404, 'Driver not found');
   }
 
   if (driver.status === true) {
-    throw new ResponseError(400, "Driver account is already active");
+    throw new ResponseError(400, 'Driver account is already active');
   }
 
   const updatedDriver = await prismaClient.driver.update({
@@ -189,11 +188,11 @@ const activateDriverAccount = async (driverId) => {
   try {
     await sendDriverAccountActivationEmail(
       updatedDriver.email,
-      updatedDriver.name
+      updatedDriver.name,
     );
-    console.log("Activation email sent successfully");
+    console.log('Activation email sent successfully');
   } catch (error) {
-    console.error("Error sending activation email:", error.message);
+    console.error('Error sending activation email:', error.message);
   }
 
   return updatedDriver;
@@ -207,11 +206,11 @@ const deactivateDriverAccount = async (driverId, reason) => {
   });
 
   if (!driver) {
-    throw new ResponseError(404, "Driver not found");
+    throw new ResponseError(404, 'Driver not found');
   }
 
   if (driver.status === false) {
-    throw new ResponseError(400, "Driver account is already inactive");
+    throw new ResponseError(400, 'Driver account is already inactive');
   }
 
   const updatedDriver = await prismaClient.driver.update({
@@ -231,11 +230,11 @@ const deactivateDriverAccount = async (driverId, reason) => {
     await sendDriverAccountDeactivationEmail(
       updatedDriver.email,
       updatedDriver.name,
-      reason
+      reason,
     );
-    console.log("Deactivation email sent successfully");
+    console.log('Deactivation email sent successfully');
   } catch (error) {
-    console.error("Error sending deactivation email:", error.message);
+    console.error('Error sending deactivation email:', error.message);
   }
 
   return updatedDriver;
@@ -249,11 +248,11 @@ const activateCustomerAccount = async (customerId) => {
   });
 
   if (!customer) {
-    throw new ResponseError(404, "Customer not found");
+    throw new ResponseError(404, 'Customer not found');
   }
 
   if (customer.status === true) {
-    throw new ResponseError(400, "Customer account is already active");
+    throw new ResponseError(400, 'Customer account is already active');
   }
 
   const updatedCustomer = await prismaClient.customer.update({
@@ -272,11 +271,11 @@ const activateCustomerAccount = async (customerId) => {
   try {
     await sendCustomerAccountActivationEmail(
       updatedCustomer.email,
-      updatedCustomer.name
+      updatedCustomer.name,
     );
-    console.log("Deactivation email sent successfully");
+    console.log('Deactivation email sent successfully');
   } catch (error) {
-    console.error("Error sending deactivation email:", error.message);
+    console.error('Error sending deactivation email:', error.message);
   }
 
   return updatedCustomer;
@@ -290,11 +289,11 @@ const deactivateCustomerAccount = async (customerId, reason) => {
   });
 
   if (!customer) {
-    throw new ResponseError(404, "Customer not found");
+    throw new ResponseError(404, 'Customer not found');
   }
 
   if (customer.status === false) {
-    throw new ResponseError(400, "Customer account is already inactive");
+    throw new ResponseError(400, 'Customer account is already inactive');
   }
 
   const updatedCustomer = await prismaClient.customer.update({
@@ -314,11 +313,11 @@ const deactivateCustomerAccount = async (customerId, reason) => {
     await sendCustomerAccountDeactivationEmail(
       updatedCustomer.email,
       updatedCustomer.name,
-      reason
+      reason,
     );
-    console.log("Deactivation email sent successfully");
+    console.log('Deactivation email sent successfully');
   } catch (error) {
-    console.error("Error sending deactivation email:", error.message);
+    console.error('Error sending deactivation email:', error.message);
   }
 
   return updatedCustomer;
@@ -343,7 +342,7 @@ const getOrderan = async () => {
   });
 
   // Ambil nama driver dari tabel driver menggunakan driverId
-  for (let order of orders) {
+  for (const order of orders) {
     const driver = await prismaClient.driver.findUnique({
       where: {
         id: order.driverId,
@@ -352,7 +351,7 @@ const getOrderan = async () => {
         name: true,
       },
     });
-    order.driverName = driver ? driver.name : "Unknown"; // Tambahkan nama driver ke dalam objek order
+    order.driverName = driver ? driver.name : 'Unknown'; // Tambahkan nama driver ke dalam objek order
 
     // Ambil nama customer dari tabel customer menggunakan customerId
     const customer = await prismaClient.customer.findUnique({
@@ -363,22 +362,22 @@ const getOrderan = async () => {
         name: true,
       },
     });
-    order.customerName = customer ? customer.name : "Unknown"; // Tambahkan nama customer ke dalam objek order
+    order.customerName = customer ? customer.name : 'Unknown'; // Tambahkan nama customer ke dalam objek order
   }
 
-  for (let order of orders) {
+  for (const order of orders) {
     if (order.createDatetime) {
       order.createDatetime = format(
         new Date(order.createDatetime),
-        "dd MMMM yyyy HH:mm",
-        { locale: id }
+        'dd MMMM yyyy HH:mm',
+        { locale: id },
       );
     }
     if (order.updateDatetime) {
       order.updateDatetime = format(
         new Date(order.updateDatetime),
-        "dd MMMM yyyy HH:mm",
-        { locale: id }
+        'dd MMMM yyyy HH:mm',
+        { locale: id },
       );
     }
   }
@@ -426,10 +425,10 @@ const getRide = async () => {
   // Formatting rides and adding driver names
   const formattedRides = rides.map((ride) => ({
     ...ride,
-    createDatetime: format(new Date(ride.createDatetime), "PPPP p", {
+    createDatetime: format(new Date(ride.createDatetime), 'PPPP p', {
       locale: id,
     }),
-    updateDatetime: format(new Date(ride.updateDatetime), "PPPP p", {
+    updateDatetime: format(new Date(ride.updateDatetime), 'PPPP p', {
       locale: id,
     }),
     driverName: driverMap[ride.driverId], // Adding driver name
@@ -441,17 +440,17 @@ const getRide = async () => {
 const logout = async (email) => {
   const admin = await prismaClient.admin.findUnique({
     where: {
-      email: email,
+      email,
     },
   });
 
   if (!admin) {
-    throw new ResponseError(404, "Admin not found");
+    throw new ResponseError(404, 'Admin not found');
   }
 
   return prismaClient.admin.update({
     where: {
-      email: email,
+      email,
     },
     data: {
       token: null,

@@ -1,5 +1,15 @@
-import { prismaClient } from "../application/database.js";
-import { validate } from "../validation/validation.js";
+import moment from 'moment';
+import bcrypt from 'bcryptjs';
+import { v4 as uuid } from 'uuid';
+import { initializeApp } from 'firebase/app';
+import {
+  getStorage,
+  ref,
+  getDownloadURL,
+  uploadBytesResumable,
+} from 'firebase/storage';
+import { prismaClient } from '../application/database.js';
+import { validate } from '../validation/validation.js';
 import {
   registerDriverValidation,
   resendOTPEmailRegisterDriverValidation,
@@ -15,21 +25,11 @@ import {
   updateLocationDriverValidation,
   changePasswordDriverValidation,
   updateDeviceTokenDriverValidation,
-} from "../validation/driver-validation.js";
-import { ResponseError } from "../error/response-error.js";
-import moment from "moment";
-import bcrypt from "bcryptjs";
-import { v4 as uuid } from "uuid";
-import { sendOTPRegisterDriverByEmail } from "../utils/sendEmailRegister.js";
-import { sendOTPForgotPasswordDriverByEmail } from "../utils/sendEmailForgotPassword.js";
-import { initializeApp } from "firebase/app";
-import config from "../config/firebase.config.js";
-import {
-  getStorage,
-  ref,
-  getDownloadURL,
-  uploadBytesResumable,
-} from "firebase/storage";
+} from '../validation/driver-validation.js';
+import { ResponseError } from '../error/response-error.js';
+import { sendOTPRegisterDriverByEmail } from '../utils/sendEmailRegister.js';
+import { sendOTPForgotPasswordDriverByEmail } from '../utils/sendEmailForgotPassword.js';
+import config from '../config/firebase.config.js';
 
 initializeApp(config.firebaseConfig);
 
@@ -52,10 +52,10 @@ const register = async (request) => {
 
   if (countDriver === 1) {
     if (driverDatabase.verifiedEmail) {
-      throw new ResponseError(400, "registered", driver.email);
+      throw new ResponseError(400, 'registered', driver.email);
     }
 
-    throw new ResponseError(400, "unverified", driver.email);
+    throw new ResponseError(400, 'unverified', driver.email);
 
     // return {
     //   status:'error',
@@ -67,14 +67,13 @@ const register = async (request) => {
   const bcryptSaltRounds = 10;
   driver.password = await bcrypt.hash(driver.password, bcryptSaltRounds);
 
-  const photo =
-    "https://firebasestorage.googleapis.com/v0/b/airport-taxi-sharing-ce9e9.appspot.com/o/driver_profiles%2Fprofile_default.png?alt=media&token=efa3bd81-8bff-4bf0-8868-5ea52f81afe4";
+  const photo = 'https://firebasestorage.googleapis.com/v0/b/airport-taxi-sharing-ce9e9.appspot.com/o/driver_profiles%2Fprofile_default.png?alt=media&token=efa3bd81-8bff-4bf0-8868-5ea52f81afe4';
   driver.photo = photo;
 
   const otp = Math.floor(1000 + Math.random() * 9000).toString();
   driver.otp = otp;
 
-  const expirationTime = moment().add(1, "minutes").toISOString();
+  const expirationTime = moment().add(1, 'minutes').toISOString();
   driver.otpExpiry = expirationTime;
 
   driver.verifiedEmail = false;
@@ -83,10 +82,10 @@ const register = async (request) => {
   // Kirim OTP via email
   try {
     await sendOTPRegisterDriverByEmail(driver.email, otp, driver.name);
-    console.log("Email sent successfully.");
+    console.log('Email sent successfully.');
   } catch (error) {
-    console.error("Error sending email:", error);
-    throw new ResponseError(500, "Internal Server Error");
+    console.error('Error sending email:', error);
+    throw new ResponseError(500, 'Internal Server Error');
   }
 
   return prismaClient.driver.create({
@@ -103,35 +102,35 @@ const resendOTPEmailRegister = async (request) => {
 
   const existingDriver = await prismaClient.driver.findUnique({
     where: {
-      email: email,
+      email,
     },
   });
 
   if (!existingDriver) {
-    throw new ResponseError(404, "Driver tidak ditemukan", email);
+    throw new ResponseError(404, 'Driver tidak ditemukan', email);
   }
 
   if (existingDriver.verifiedEmail) {
-    throw new ResponseError(400, "Email sudah diverifikasi", email);
+    throw new ResponseError(400, 'Email sudah diverifikasi', email);
   }
 
   const otp = Math.floor(1000 + Math.random() * 9000).toString();
-  const expirationTime = moment().add(1, "minutes").toISOString();
+  const expirationTime = moment().add(1, 'minutes').toISOString();
 
   try {
     await sendOTPRegisterDriverByEmail(email, otp, existingDriver.name);
-    console.log("Email sent successfully.");
+    console.log('Email sent successfully.');
   } catch (error) {
-    console.error("Error sending email:", error);
-    throw new ResponseError(500, "Internal Server Error");
+    console.error('Error sending email:', error);
+    throw new ResponseError(500, 'Internal Server Error');
   }
 
   return await prismaClient.driver.update({
     where: {
-      email: email,
+      email,
     },
     data: {
-      otp: otp,
+      otp,
       otpExpiry: expirationTime,
     },
     select: {
@@ -143,33 +142,33 @@ const resendOTPEmailRegister = async (request) => {
 const verificationEmailRegister = async (request) => {
   const { email, otp } = validate(
     verificationEmailRegisterDriverValidation,
-    request
+    request,
   );
 
   const existingDriver = await prismaClient.driver.findUnique({
     where: {
-      email: email,
+      email,
     },
   });
 
   if (!existingDriver) {
-    throw new ResponseError(404, "Driver tidak ditemukan", email);
+    throw new ResponseError(404, 'Driver tidak ditemukan', email);
   }
 
   if (
-    existingDriver.otp != otp ||
-    moment(existingDriver.otpExpiry).isBefore(moment())
+    existingDriver.otp != otp
+    || moment(existingDriver.otpExpiry).isBefore(moment())
   ) {
     throw new ResponseError(
       400,
-      "Kode OTP tidak valid atau telah kadaluarsa",
-      existingDriver.email
+      'Kode OTP tidak valid atau telah kadaluarsa',
+      existingDriver.email,
     );
   }
 
   return await prismaClient.driver.update({
     where: {
-      email: email,
+      email,
     },
     data: {
       otp: null,
@@ -187,35 +186,35 @@ const forgotPassword = async (request) => {
 
   const existingDriver = await prismaClient.driver.findUnique({
     where: {
-      email: email,
+      email,
     },
   });
 
   if (!existingDriver) {
-    throw new ResponseError(404, "Driver tidak ditemukan", email);
+    throw new ResponseError(404, 'Driver tidak ditemukan', email);
   }
 
   if (!existingDriver.verifiedEmail) {
-    throw new ResponseError(404, "Driver tidak ditemukan", email);
+    throw new ResponseError(404, 'Driver tidak ditemukan', email);
   }
 
   const otp = Math.floor(1000 + Math.random() * 9000).toString();
-  const expirationTime = moment().add(1, "minutes").toISOString();
+  const expirationTime = moment().add(1, 'minutes').toISOString();
 
   try {
     await sendOTPForgotPasswordDriverByEmail(email, otp, existingDriver.name);
-    console.log("Email sent successfully.");
+    console.log('Email sent successfully.');
   } catch (error) {
-    console.error("Error sending email:", error);
-    throw new ResponseError(500, "Internal Server Error");
+    console.error('Error sending email:', error);
+    throw new ResponseError(500, 'Internal Server Error');
   }
 
   return await prismaClient.driver.update({
     where: {
-      email: email,
+      email,
     },
     data: {
-      otp: otp,
+      otp,
       otpExpiry: expirationTime,
     },
     select: {
@@ -227,36 +226,36 @@ const forgotPassword = async (request) => {
 const resendOTPEmailForgotPassword = async (request) => {
   const { email } = validate(
     resendOTPEmailForgotPasswordDriverValidation,
-    request
+    request,
   );
 
   const existingDriver = await prismaClient.driver.findUnique({
     where: {
-      email: email,
+      email,
     },
   });
 
   if (!existingDriver) {
-    throw new ResponseError(404, "Driver tidak ditemukan", email);
+    throw new ResponseError(404, 'Driver tidak ditemukan', email);
   }
 
   const otp = Math.floor(1000 + Math.random() * 9000).toString();
-  const expirationTime = moment().add(1, "minutes").toISOString();
+  const expirationTime = moment().add(1, 'minutes').toISOString();
 
   try {
     await sendOTPForgotPasswordDriverByEmail(email, otp, existingDriver.name);
-    console.log("Email sent successfully.");
+    console.log('Email sent successfully.');
   } catch (error) {
-    console.error("Error sending email:", error);
-    throw new ResponseError(500, "Internal Server Error");
+    console.error('Error sending email:', error);
+    throw new ResponseError(500, 'Internal Server Error');
   }
 
   return await prismaClient.driver.update({
     where: {
-      email: email,
+      email,
     },
     data: {
-      otp: otp,
+      otp,
       otpExpiry: expirationTime,
     },
     select: {
@@ -268,33 +267,33 @@ const resendOTPEmailForgotPassword = async (request) => {
 const verificationEmailForgotPassword = async (request) => {
   const { email, otp } = validate(
     verificationEmailForgotPasswordDriverValidation,
-    request
+    request,
   );
 
   const existingDriver = await prismaClient.driver.findUnique({
     where: {
-      email: email,
+      email,
     },
   });
 
   if (!existingDriver) {
-    throw new ResponseError(404, "Driver tidak ditemukan", email);
+    throw new ResponseError(404, 'Driver tidak ditemukan', email);
   }
 
   if (
-    existingDriver.otp != otp ||
-    moment(existingDriver.otpExpiry).isBefore(moment())
+    existingDriver.otp != otp
+    || moment(existingDriver.otpExpiry).isBefore(moment())
   ) {
     throw new ResponseError(
       400,
-      "Kode OTP tidak valid atau telah kadaluarsa",
-      existingDriver.email
+      'Kode OTP tidak valid atau telah kadaluarsa',
+      existingDriver.email,
     );
   }
 
   return await prismaClient.driver.update({
     where: {
-      email: email,
+      email,
     },
     data: {
       otp: null,
@@ -316,7 +315,7 @@ const resetPassword = async (request) => {
   });
 
   if (!driverDatabase || !driverDatabase.verifiedEmail) {
-    throw new ResponseError(400, "Driver tidak dapat ditemukan", driver.email);
+    throw new ResponseError(400, 'Driver tidak dapat ditemukan', driver.email);
   }
 
   const bcryptSaltRounds = 10;
@@ -345,24 +344,24 @@ const login = async (request) => {
   });
 
   if (!driver) {
-    throw new ResponseError(401, "Kredensial tidak valid", loginRequest.email);
+    throw new ResponseError(401, 'Kredensial tidak valid', loginRequest.email);
   }
 
   if (driver.verifiedEmail) {
     const isPasswordValid = await bcrypt.compare(
       loginRequest.password,
-      driver.password
+      driver.password,
     );
 
     if (!isPasswordValid) {
       throw new ResponseError(
         401,
-        "Kredensial tidak valid",
-        loginRequest.email
+        'Kredensial tidak valid',
+        loginRequest.email,
       );
     }
     if (!driver.status) {
-      throw new ResponseError(401, "Akun Anda dinonaktifkan", loginRequest.email);
+      throw new ResponseError(401, 'Akun Anda dinonaktifkan', loginRequest.email);
     }
     const token = uuid().toString();
     const tokenExpiry = new Date();
@@ -370,8 +369,8 @@ const login = async (request) => {
 
     return prismaClient.driver.update({
       data: {
-        token: token,
-        tokenExpiry: tokenExpiry,
+        token,
+        tokenExpiry,
       },
       where: {
         email: driver.email,
@@ -380,9 +379,8 @@ const login = async (request) => {
         token: true,
       },
     });
-  } else {
-    throw new ResponseError(401, "Kredensial tidak valid", loginRequest.email);
   }
+  throw new ResponseError(401, 'Kredensial tidak valid', loginRequest.email);
 };
 
 const checkAuthentication = async (email) => {
@@ -390,7 +388,7 @@ const checkAuthentication = async (email) => {
 
   const driver = await prismaClient.driver.findUnique({
     where: {
-      email: email,
+      email,
     },
     select: {
       token: true,
@@ -398,7 +396,7 @@ const checkAuthentication = async (email) => {
   });
 
   if (!driver) {
-    throw new ResponseError(404, "Driver tidak dapat ditemukan", email);
+    throw new ResponseError(404, 'Driver tidak dapat ditemukan', email);
   }
 
   return driver;
@@ -409,7 +407,7 @@ const get = async (email) => {
 
   const driver = await prismaClient.driver.findUnique({
     where: {
-      email: email,
+      email,
     },
     select: {
       token: true,
@@ -425,7 +423,7 @@ const get = async (email) => {
   });
 
   if (!driver) {
-    throw new ResponseError(404, "Driver tidak dapat ditemukan", email);
+    throw new ResponseError(404, 'Driver tidak dapat ditemukan', email);
   }
 
   return driver;
@@ -443,12 +441,12 @@ const update = async (requestData, requestFiles) => {
   if (!driver) {
     throw new ResponseError(
       404,
-      "Driver tidak dapat ditemukan",
-      updateRequest.email
+      'Driver tidak dapat ditemukan',
+      updateRequest.email,
     );
   }
 
-  let updatedDriverData = {
+  const updatedDriverData = {
     noMembership: updateRequest.noMembership,
     licensePlate: updateRequest.licensePlate,
     name: updateRequest.name,
@@ -460,18 +458,18 @@ const update = async (requestData, requestFiles) => {
 
     const storageRef = ref(
       storage,
-      `driver_profiles/${requestFiles.originalname + " " + dateTime}`
+      `driver_profiles/${`${requestFiles.originalname} ${dateTime}`}`,
     );
 
     const metadata = {
-      contentType: "image/jpeg",
+      contentType: 'image/jpeg',
     };
 
     // Upload the file to Firebase Storage
     const snapshot = await uploadBytesResumable(
       storageRef,
       requestFiles.buffer,
-      metadata
+      metadata,
     );
 
     const imageURL = await getDownloadURL(snapshot.ref);
@@ -494,35 +492,33 @@ const update = async (requestData, requestFiles) => {
 
 const giveCurrentDateTime = () => {
   const today = new Date();
-  const date =
-    today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
-  const time =
-    today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-  const dateTime = date + " " + time;
+  const date = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+  const time = `${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}`;
+  const dateTime = `${date} ${time}`;
   return dateTime;
 };
 
 const updateLocation = async (email, requestData) => {
   const updateLocationRequest = validate(
     updateLocationDriverValidation,
-    requestData
+    requestData,
   );
 
   const driver = await prismaClient.driver.findUnique({
     where: {
-      email: email,
+      email,
     },
   });
 
   if (!driver) {
     throw new ResponseError(
       404,
-      "Driver tidak dapat ditemukan",
-      updateRequest.email
+      'Driver tidak dapat ditemukan',
+      updateRequest.email,
     );
   }
 
-  let data = {
+  const data = {
     lat: updateLocationRequest.latitude,
     long: updateLocationRequest.longitude,
   };
@@ -530,7 +526,7 @@ const updateLocation = async (email, requestData) => {
     where: {
       email: driver.email,
     },
-    data: data,
+    data,
     select: {
       email: true,
     },
@@ -542,31 +538,31 @@ const updateLocation = async (email, requestData) => {
 const updateDeviceToken = async (email, requestData) => {
   const updateDeviceTokenRequest = validate(
     updateDeviceTokenDriverValidation,
-    requestData
+    requestData,
   );
 
   const driver = await prismaClient.driver.findUnique({
     where: {
-      email: email,
+      email,
     },
   });
 
   if (!driver) {
     throw new ResponseError(
       404,
-      "Driver tidak dapat ditemukan",
-      updateDeviceTokenRequest.email
+      'Driver tidak dapat ditemukan',
+      updateDeviceTokenRequest.email,
     );
   }
 
-  let data = {
+  const data = {
     deviceToken: updateDeviceTokenRequest.deviceToken,
   };
   const updatedDriver = await prismaClient.driver.update({
     where: {
       email: driver.email,
     },
-    data: data,
+    data,
     select: {
       deviceToken: true,
     },
@@ -578,31 +574,31 @@ const updateDeviceToken = async (email, requestData) => {
 const changePassword = async (email, request) => {
   const changePasswordRequest = validate(
     changePasswordDriverValidation,
-    request
+    request,
   );
 
   const driver = await prismaClient.driver.findUnique({
     where: {
-      email: email,
+      email,
     },
   });
 
   if (!driver) {
-    throw new ResponseError(404, "Driver tidak ditemukan", email);
+    throw new ResponseError(404, 'Driver tidak ditemukan', email);
   }
 
   const isOldPasswordValid = await bcrypt.compare(
     changePasswordRequest.oldPassword,
-    driver.password
+    driver.password,
   );
 
   if (!isOldPasswordValid) {
-    throw new ResponseError(401, "Password lama tidak valid", driver.email);
+    throw new ResponseError(401, 'Password lama tidak valid', driver.email);
   }
 
   const newPasswordHash = await bcrypt.hash(
     changePasswordRequest.newPassword,
-    10
+    10,
   );
 
   const updatedDriver = await prismaClient.driver.update({
@@ -622,17 +618,17 @@ const logout = async (email) => {
 
   const driver = await prismaClient.driver.findUnique({
     where: {
-      email: email,
+      email,
     },
   });
 
   if (!driver) {
-    throw new ResponseError(404, "Driver tidak ditemukan");
+    throw new ResponseError(404, 'Driver tidak ditemukan');
   }
 
   return prismaClient.driver.update({
     where: {
-      email: email,
+      email,
     },
     data: {
       token: null,
