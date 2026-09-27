@@ -1,3 +1,4 @@
+import 'package:client_user/data/dataSources/api_constants.dart';
 import 'dart:convert';
 import 'package:client_user/data/models/request/register_request_model.dart';
 import 'package:client_user/data/models/response/register_response_model.dart';
@@ -10,7 +11,7 @@ class RegisterAPIData {
   ) async {
     try {
       final response = await http.post(
-        Uri.parse('https://airporttaxisharingappserver-production.up.railway.app/api/customers'),
+        Uri.parse('${ApiConstants.baseUrl}customers'),
         headers: {'Content-Type': 'application/json'},
         body: registerRequestModel.toJson(),
       );

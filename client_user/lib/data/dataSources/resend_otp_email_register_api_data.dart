@@ -1,3 +1,4 @@
+import 'package:client_user/data/dataSources/api_constants.dart';
 import 'dart:convert';
 import 'package:client_user/data/models/request/resend_otp_email_register_request_model.dart';
 import 'package:client_user/data/models/response/resend_otp_email_register_response_model_model.dart';
@@ -10,7 +11,7 @@ class ResendOTPEmailRegisterAPIData {
   ) async {
     try {
       final response = await http.post(
-        Uri.parse('https://airporttaxisharingappserver-production.up.railway.app/api/customers/resendOTPEmailRegister'),
+        Uri.parse('${ApiConstants.baseUrl}customers/resendOTPEmailRegister'),
         headers: {'Content-Type': 'application/json'},
         body: resendOTPEmailRegisterRequestModel.toJson(),
       );

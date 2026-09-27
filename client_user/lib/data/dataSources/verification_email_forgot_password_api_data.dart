@@ -1,3 +1,4 @@
+import 'package:client_user/data/dataSources/api_constants.dart';
 import 'dart:convert';
 
 import 'package:client_user/data/models/request/verification_email_forgot_password_request_model.dart';
@@ -11,7 +12,7 @@ class VerificationEmailForgotPasswordAPIData {
   ) async {
     try {
       final response = await http.post(
-        Uri.parse('https://airporttaxisharingappserver-production.up.railway.app/api/customers/verificationEmailForgotPassword'),
+        Uri.parse('${ApiConstants.baseUrl}customers/verificationEmailForgotPassword'),
         headers: {'Content-Type': 'application/json'},
         body: verificationEmailForgotPasswordRequestModel.toJson(),
       );

@@ -1,3 +1,4 @@
+import 'package:client_user/data/dataSources/api_constants.dart';
 import 'dart:convert';
 
 import 'package:client_user/data/models/request/reset_password_request_model.dart';
@@ -11,7 +12,7 @@ class ResetPasswordAPIData {
   ) async {
     try {
       final response = await http.patch(
-        Uri.parse('https://airporttaxisharingappserver-production.up.railway.app/api/customers/resetPassword'),
+        Uri.parse('${ApiConstants.baseUrl}customers/resetPassword'),
         headers: {'Content-Type': 'application/json'},
         body: resetPasswordRequestModel.toJson(),
       );
