@@ -21,6 +21,12 @@ subprojects {
 }
 subprojects {
     project.evaluationDependsOn(':app')
+    // Older plugins must compile against the APIs required by Flutter's AndroidX dependencies.
+    project.plugins.withId('com.android.library') {
+        project.extensions.getByName('androidComponents').finalizeDsl { android ->
+            android.compileSdk = project(':app').android.compileSdk
+        }
+    }
 }
 
 tasks.register("clean", Delete) {
