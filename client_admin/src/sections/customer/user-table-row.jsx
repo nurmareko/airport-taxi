@@ -65,8 +65,8 @@ export default function UserTableRow({
     setIsLoading(true);
     try {
       const endpoint = status
-        ? 'http://localhost:3000/api/admin/deactivateCustomerAccount'
-        : 'http://localhost:3000/api/admin/activateCustomerAccount';
+        ? 'http://localhost:3001/api/admin/deactivateCustomerAccount'
+        : 'http://localhost:3001/api/admin/activateCustomerAccount';
 
       const response = await fetch(endpoint, {
         method: 'PATCH',

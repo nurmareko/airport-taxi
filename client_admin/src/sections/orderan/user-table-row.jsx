@@ -64,8 +64,8 @@ export default function UserTableRow({
     setIsLoading(true); // Set isLoading to true at the start
     try {
       const endpoint = status
-        ? 'http://localhost:3000/api/admin/deactivateDriverAccount'
-        : 'http://localhost:3000/api/admin/activateDriverAccount';
+        ? 'http://localhost:3001/api/admin/deactivateDriverAccount'
+        : 'http://localhost:3001/api/admin/activateDriverAccount';
 
       const response = await fetch(endpoint, {
         method: 'PATCH',

@@ -35,7 +35,7 @@ export default function RidePage() {
 
     const fetchRides = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/admin/getRide', {
+        const response = await fetch('http://localhost:3001/api/admin/getRide', {
           method: 'GET',
           headers: {
             Authorization: `${token}`,

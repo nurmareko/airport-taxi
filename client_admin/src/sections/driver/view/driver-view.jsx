@@ -37,7 +37,7 @@ export default function DriverPage() {
 
     const fetchDrivers = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/admin/getDriver', {
+        const response = await fetch('http://localhost:3001/api/admin/getDriver', {
           method: 'GET',
           headers: {
             Authorization: `${token}`,

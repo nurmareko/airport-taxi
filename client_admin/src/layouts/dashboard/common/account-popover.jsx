@@ -35,7 +35,7 @@ export default function AccountPopover() {
 
     const fetchAccountData = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/admin/getCurrent', {
+        const response = await fetch('http://localhost:3001/api/admin/getCurrent', {
           method: 'GET',
           headers: {
             Authorization: `${token}`,
@@ -70,7 +70,7 @@ export default function AccountPopover() {
     const token = localStorage.getItem('authToken');
 
     try {
-      const response = await fetch('http://localhost:3000/api/admin/logout', {
+      const response = await fetch('http://localhost:3001/api/admin/logout', {
         method: 'DELETE',
         headers: {
           Authorization: `${token}`,

@@ -50,7 +50,7 @@ export default function Nav({ openNav, onCloseNav }) {
 
     const fetchAccountData = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/admin/getCurrent', {
+        const response = await fetch('http://localhost:3001/api/admin/getCurrent', {
           method: 'GET',
           headers: {
             Authorization: `${token}`,

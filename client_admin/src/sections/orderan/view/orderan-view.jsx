@@ -59,7 +59,7 @@ export default function OrderanPage() {
 
     const fetchOrderans = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/admin/getOrderan', {
+        const response = await fetch('http://localhost:3001/api/admin/getOrderan', {
           method: 'GET',
           headers: {
             Authorization: `${token}`,

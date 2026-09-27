@@ -48,7 +48,7 @@ export default function LoginView() {
     // If both fields are not empty, proceed with the login
     if (email && password) {
       setLoading(true); // Set loading to true
-      const apiUrl = 'http://localhost:3000/api/admin/login';
+      const apiUrl = 'http://localhost:3001/api/admin/login';
 
       // Prepare the login data using shorthand property notation
       const loginData = {

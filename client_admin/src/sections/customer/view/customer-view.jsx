@@ -37,7 +37,7 @@ export default function CustomerPage() {
 
     const fetchCustomers = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/admin/getCustomer', {
+        const response = await fetch('http://localhost:3001/api/admin/getCustomer', {
           method: 'GET',
           headers: {
             Authorization: `${token}`,

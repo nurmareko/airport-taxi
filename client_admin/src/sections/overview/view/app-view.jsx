@@ -53,7 +53,7 @@ export default function AppView() {
 
     const fetchRideChartData = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/admin/getRide', {
+        const response = await fetch('http://localhost:3001/api/admin/getRide', {
           method: 'GET',
           headers: {
             Authorization: `${token}`,
@@ -88,7 +88,7 @@ export default function AppView() {
 
     const fetchOrderChartData = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/admin/getOrderan', {
+        const response = await fetch('http://localhost:3001/api/admin/getOrderan', {
           method: 'GET',
           headers: {
             Authorization: `${token}`,
@@ -121,10 +121,10 @@ export default function AppView() {
       }
     };
 
-    fetchData('http://localhost:3000/api/admin/getCustomer', setCustomerCount);
-    fetchData('http://localhost:3000/api/admin/getDriver', setDriverCount);
-    fetchData('http://localhost:3000/api/admin/getRide', setRideCount);
-    fetchData('http://localhost:3000/api/admin/getOrderan', setOrderCount);
+    fetchData('http://localhost:3001/api/admin/getCustomer', setCustomerCount);
+    fetchData('http://localhost:3001/api/admin/getDriver', setDriverCount);
+    fetchData('http://localhost:3001/api/admin/getRide', setRideCount);
+    fetchData('http://localhost:3001/api/admin/getOrderan', setOrderCount);
     fetchRideChartData();
     fetchOrderChartData();
   }, [token, router]);
