@@ -67,6 +67,7 @@ import 'package:client_driver/utils/location_tracking_service.dart';
 import 'package:client_driver/utils/secure_storage.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -78,11 +79,50 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  await LocationService.instance.startLocationUpdates(
-      UpdateLocationBloc(UpdateLocationAPIData()),
-      UpdateLocationOrderanBloc(UpdateLocationOrderanAPIData()));
+  await Firebase.initializeApp(
+    options: kIsWeb
+        ? const FirebaseOptions(
+            apiKey: 'AIzaSyDfN0oc0WyP4R9eznOxlHfuv1iZ55jbd24',
+            authDomain: 'airport-taxi-f58c5.firebaseapp.com',
+            projectId: 'airport-taxi-f58c5',
+            storageBucket: 'airport-taxi-f58c5.firebasestorage.app',
+            messagingSenderId: '855413045917',
+            appId: '1:855413045917:web:77d2cd48f3282004bef274',
+            measurementId: 'G-91G9MBF9GY',
+          )
+        : null,
+  );
 
+  // Browser push needs a service worker and VAPID configuration.
+  if (!kIsWeb) {
+    await LocationService.instance.startLocationUpdates(
+        UpdateLocationBloc(UpdateLocationAPIData()),
+        UpdateLocationOrderanBloc(UpdateLocationOrderanAPIData()));
+    await _initializeMobileNotifications();
+  }
+
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    systemNavigationBarColor: AppColors.darkBackgroundBodyColor,
+    systemNavigationBarDividerColor: Colors.transparent,
+  ));
+  runApp(const MyApp());
+
+  if (kIsWeb) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      try {
+        await LocationService.instance.startLocationUpdates(
+            UpdateLocationBloc(UpdateLocationAPIData()),
+            UpdateLocationOrderanBloc(UpdateLocationOrderanAPIData()));
+      } on Exception catch (error, stackTrace) {
+        debugPrint('Unable to start browser location tracking: $error');
+        debugPrintStack(stackTrace: stackTrace);
+      }
+    });
+  }
+}
+
+Future<void> _initializeMobileNotifications() async {
   // Inisialisasi SecureStorage
   final SecureStorage secureStorage = SecureStorage();
 
@@ -132,13 +172,6 @@ Future<void> main() async {
   });
 
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    systemNavigationBarColor: AppColors.darkBackgroundBodyColor,
-    systemNavigationBarDividerColor: Colors.transparent,
-  ));
-  runApp(const MyApp());
 }
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
