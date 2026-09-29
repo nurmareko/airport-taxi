@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:client_driver/data/dataSources/api_constant.dart';
 import 'package:client_driver/data/models/request/update_location_orderan_request_model.dart';
-import 'package:client_driver/data/models/response/update_Location_orderan_response_model.dart';
+import 'package:client_driver/data/models/response/update_location_orderan_response_model.dart';
 import 'package:client_driver/error/new-exception.dart';
 import 'package:client_driver/utils/secure_storage.dart';
 import 'package:http/http.dart' as http;
