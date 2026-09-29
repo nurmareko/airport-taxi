@@ -8,6 +8,11 @@ export const web = express();
 
 web.use(cors());
 web.use(express.json());
+
+web.get('/health', (req, res) => {
+  res.status(200).json({ status: 'ok' });
+});
+
 web.use(publicRouter);
 
 web.use(customerRouter);
