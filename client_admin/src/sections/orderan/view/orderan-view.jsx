@@ -15,6 +15,8 @@ import {
   TableContainer,
   TablePagination,
 } from '@mui/material'; // Import recharts
+import { apiEndpoint } from 'src/api-config';
+
 import Label from 'src/components/label';
 
 const getStatusLabel = (status) => {
@@ -59,7 +61,7 @@ export default function OrderanPage() {
 
     const fetchOrderans = async () => {
       try {
-        const response = await fetch('http://localhost:3001/api/admin/getOrderan', {
+        const response = await fetch(apiEndpoint('admin/getOrderan'), {
           method: 'GET',
           headers: {
             Authorization: `${token}`,

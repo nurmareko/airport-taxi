@@ -14,6 +14,8 @@ import { useRouter, usePathname } from 'src/routes/hooks';
 
 import { useResponsive } from 'src/hooks/use-responsive';
 
+import { apiEndpoint } from 'src/api-config';
+
 import Logo from 'src/components/logo';
 import Scrollbar from 'src/components/scrollbar';
 
@@ -50,7 +52,7 @@ export default function Nav({ openNav, onCloseNav }) {
 
     const fetchAccountData = async () => {
       try {
-        const response = await fetch('http://localhost:3001/api/admin/getCurrent', {
+        const response = await fetch(apiEndpoint('admin/getCurrent'), {
           method: 'GET',
           headers: {
             Authorization: `${token}`,

@@ -11,6 +11,8 @@ import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 
+import { apiEndpoint } from 'src/api-config';
+
 import Scrollbar from 'src/components/scrollbar';
 
 import TableNoData from '../table-no-data';
@@ -37,7 +39,7 @@ export default function CustomerPage() {
 
     const fetchCustomers = async () => {
       try {
-        const response = await fetch('http://localhost:3001/api/admin/getCustomer', {
+        const response = await fetch(apiEndpoint('admin/getCustomer'), {
           method: 'GET',
           headers: {
             Authorization: `${token}`,

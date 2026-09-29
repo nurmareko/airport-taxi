@@ -20,6 +20,8 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 
+import { apiEndpoint } from 'src/api-config';
+
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
 
@@ -65,8 +67,8 @@ export default function UserTableRow({
     setIsLoading(true);
     try {
       const endpoint = status
-        ? 'http://localhost:3001/api/admin/deactivateCustomerAccount'
-        : 'http://localhost:3001/api/admin/activateCustomerAccount';
+        ? apiEndpoint('admin/deactivateCustomerAccount')
+        : apiEndpoint('admin/activateCustomerAccount');
 
       const response = await fetch(endpoint, {
         method: 'PATCH',

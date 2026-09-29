@@ -20,6 +20,8 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 
+import { apiEndpoint } from 'src/api-config';
+
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
 
@@ -64,8 +66,8 @@ export default function UserTableRow({
     setIsLoading(true); // Set isLoading to true at the start
     try {
       const endpoint = status
-        ? 'http://localhost:3001/api/admin/deactivateDriverAccount'
-        : 'http://localhost:3001/api/admin/activateDriverAccount';
+        ? apiEndpoint('admin/deactivateDriverAccount')
+        : apiEndpoint('admin/activateDriverAccount');
 
       const response = await fetch(endpoint, {
         method: 'PATCH',

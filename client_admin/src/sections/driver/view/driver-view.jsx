@@ -11,6 +11,8 @@ import TablePagination from '@mui/material/TablePagination';
 
 import { useRouter } from 'src/routes/hooks';
 
+import { apiEndpoint } from 'src/api-config';
+
 import Scrollbar from 'src/components/scrollbar';
 
 import TableNoData from '../table-no-data';
@@ -37,7 +39,7 @@ export default function DriverPage() {
 
     const fetchDrivers = async () => {
       try {
-        const response = await fetch('http://localhost:3001/api/admin/getDriver', {
+        const response = await fetch(apiEndpoint('admin/getDriver'), {
           method: 'GET',
           headers: {
             Authorization: `${token}`,

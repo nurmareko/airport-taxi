@@ -24,6 +24,8 @@ import {
   DialogContentText,
 } from '@mui/material';
 
+import { apiEndpoint } from 'src/api-config';
+
 import Iconify from 'src/components/iconify';
 
 export default function FarePage() {
@@ -39,7 +41,7 @@ export default function FarePage() {
 
     const fetchFares = async () => {
       try {
-        const response = await fetch('http://localhost:3001/api/admin/getFare', {
+        const response = await fetch(apiEndpoint('admin/getFare'), {
           method: 'GET',
           headers: {
             Authorization: `${token}`,
@@ -102,7 +104,7 @@ export default function FarePage() {
         farePerKm: parseInt(editData.farePerKm, 10)
       };
       console.log('Submitting edit with:', editDataWithIntegers.fareId, editDataWithIntegers.farePerKm);
-      const response = await fetch('http://localhost:3001/api/admin/updateFare', {
+      const response = await fetch(apiEndpoint('admin/updateFare'), {
         method: 'PATCH',
         headers: {
           Authorization: `${token}`,

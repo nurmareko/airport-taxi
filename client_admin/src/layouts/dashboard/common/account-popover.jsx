@@ -11,6 +11,8 @@ import IconButton from '@mui/material/IconButton';
 
 import { useRouter } from 'src/routes/hooks';
 
+import { apiEndpoint } from 'src/api-config';
+
 // ----------------------------------------------------------------------
 
 const MENU_OPTIONS = [];
@@ -35,7 +37,7 @@ export default function AccountPopover() {
 
     const fetchAccountData = async () => {
       try {
-        const response = await fetch('http://localhost:3001/api/admin/getCurrent', {
+        const response = await fetch(apiEndpoint('admin/getCurrent'), {
           method: 'GET',
           headers: {
             Authorization: `${token}`,
@@ -70,7 +72,7 @@ export default function AccountPopover() {
     const token = localStorage.getItem('authToken');
 
     try {
-      const response = await fetch('http://localhost:3001/api/admin/logout', {
+      const response = await fetch(apiEndpoint('admin/logout'), {
         method: 'DELETE',
         headers: {
           Authorization: `${token}`,

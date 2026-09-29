@@ -15,6 +15,25 @@
 - [Login Page](https://minimal-kit-react.vercel.app/login)
 - [Not Found Page](https://minimal-kit-react.vercel.app/404)
 
+## API environment configuration
+
+Set the API URL in one file, `client_admin/.env` (ignored by Git):
+
+```dotenv
+VITE_API_BASE_URL=https://airport-taxi-izm.chevalierlabsas.org/api/
+```
+
+For a local backend, change the value to `http://localhost:3001/api/`.
+Include the `/api/` path. Both `npm run dev` and `npm run build` use this setting.
+If the variable is unset or empty, the app defaults to the local backend.
+
+Run commands from `client_admin`. Restart the dev server after editing `.env`;
+for deployed apps, rebuild and redeploy. `npm run start` only previews the
+existing build. Deployment environment variables supplied at build time take
+precedence over `.env`.
+
+Vite embeds `VITE_` variables in browser code. Do not put secrets in them.
+
 ## Quick start
 
 - [Download from Github](https://github.com/minimal-ui-kit/material-kit-react/archive/refs/heads/main.zip) or clone the repo : `git clone https://github.com/minimal-ui-kit/material-kit-react.git`

@@ -22,6 +22,8 @@ import {
   TablePagination, // Import TablePagination
 } from '@mui/material';
 
+import { apiEndpoint } from 'src/api-config';
+
 import Label from 'src/components/label';
 
 export default function RidePage() {
@@ -35,7 +37,7 @@ export default function RidePage() {
 
     const fetchRides = async () => {
       try {
-        const response = await fetch('http://localhost:3001/api/admin/getRide', {
+        const response = await fetch(apiEndpoint('admin/getRide'), {
           method: 'GET',
           headers: {
             Authorization: `${token}`,

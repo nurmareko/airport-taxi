@@ -14,6 +14,8 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import { useRouter } from 'src/routes/hooks';
 
+import { apiEndpoint } from 'src/api-config';
+
 import AppWidgetSummary from '../app-widget-summary';
 
 export default function AppView() {
@@ -53,7 +55,7 @@ export default function AppView() {
 
     const fetchRideChartData = async () => {
       try {
-        const response = await fetch('http://localhost:3001/api/admin/getRide', {
+        const response = await fetch(apiEndpoint('admin/getRide'), {
           method: 'GET',
           headers: {
             Authorization: `${token}`,
@@ -88,7 +90,7 @@ export default function AppView() {
 
     const fetchOrderChartData = async () => {
       try {
-        const response = await fetch('http://localhost:3001/api/admin/getOrderan', {
+        const response = await fetch(apiEndpoint('admin/getOrderan'), {
           method: 'GET',
           headers: {
             Authorization: `${token}`,
@@ -121,10 +123,10 @@ export default function AppView() {
       }
     };
 
-    fetchData('http://localhost:3001/api/admin/getCustomer', setCustomerCount);
-    fetchData('http://localhost:3001/api/admin/getDriver', setDriverCount);
-    fetchData('http://localhost:3001/api/admin/getRide', setRideCount);
-    fetchData('http://localhost:3001/api/admin/getOrderan', setOrderCount);
+    fetchData(apiEndpoint('admin/getCustomer'), setCustomerCount);
+    fetchData(apiEndpoint('admin/getDriver'), setDriverCount);
+    fetchData(apiEndpoint('admin/getRide'), setRideCount);
+    fetchData(apiEndpoint('admin/getOrderan'), setOrderCount);
     fetchRideChartData();
     fetchOrderChartData();
   }, [token, router]);
