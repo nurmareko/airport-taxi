@@ -42,7 +42,7 @@ class DriverInfo {
       id: json['id'],
       name: json['name'],
       licensePlate: json['licensePlate'],
-      photo: json['photo'],
+      photo: json['photo'] ?? '',
       lat: (json['lat'] ?? 0.0).toDouble(),
       long: (json['long'] ?? 0.0).toDouble(),
       averageRating: (json['averageRating'] ?? 0.0)

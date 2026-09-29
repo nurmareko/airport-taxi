@@ -23,9 +23,9 @@ class GetCustomerResponseModel {
       email: json["email"],
       name: json["name"],
       phoneNumber: json["phoneNumber"],
-      photo: json["photo"],
-      lat: json["lat"],
-      long: json["long"],
+      photo: json["photo"] ?? '',
+      lat: (json["lat"] ?? 0.0).toDouble(),
+      long: (json["long"] ?? 0.0).toDouble(),
     );
   }
 

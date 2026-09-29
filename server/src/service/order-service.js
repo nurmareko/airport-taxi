@@ -1,12 +1,10 @@
-import axios from 'axios';
+import { getAddress, getDirections } from './google-maps-service.js';
 import { format } from 'date-fns';
 import { id } from 'date-fns/locale';
 import { prismaClient } from '../application/database.js';
 import { ResponseError } from '../error/response-error.js';
 import sendPushNotification from '../utils/sendPushNotification.js';
 import { sendCustomerReportEmail } from '../utils/sendEmailReport.js';
-
-const GOOGLE_MAPS_API_KEY_NEW = 'AIzaSyBo8MhxZIYfbX9exFOGhOuz-PnoVRwgvLY';
 
 function formattedDuration(seconds) {
   const minutes = Math.floor(seconds / 60);
@@ -30,58 +28,6 @@ function haversineDistance(lat1, long1, lat2, long2) {
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   const distance = R * c * 1000;
   return distance;
-}
-
-async function getAddress(lat, long) {
-  try {
-    console.log(`Fetching address for lat: ${lat}, long: ${long}`);
-
-    const response = await axios.get(
-      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=${GOOGLE_MAPS_API_KEY_NEW}`,
-    );
-
-    console.log('Full API Response:', JSON.stringify(response.data, null, 2));
-
-    if (
-      response.data.results.length > 0
-      && response.data.results[0].formatted_address
-    ) {
-      return response.data.results[0].formatted_address;
-    }
-    console.error('No address found for given coordinates');
-    throw new ResponseError(404, 'No address found');
-  } catch (error) {
-    console.error('Error getting address:', error);
-    throw new ResponseError(500, 'Failed to fetch address data');
-  }
-}
-
-async function getDirections(
-  originLat,
-  originLong,
-  destinationLat,
-  destinationLong,
-) {
-  const mode = 'driving';
-  const apiUrl = `https://maps.googleapis.com/maps/api/directions/json?origin=${originLat},${originLong}&destination=${destinationLat},${destinationLong}&mode=${mode}&key=${GOOGLE_MAPS_API_KEY_NEW}`;
-
-  try {
-    const response = await axios.get(apiUrl);
-    const { data } = response;
-
-    if (data.status === 'OK') {
-      const route = data.routes[0];
-      const legs = route.legs[0];
-      const distance = legs.distance.value;
-      const duration = legs.duration.value;
-
-      return { distance, duration };
-    }
-    throw new ResponseError(500, 'Failed to fetch directions data');
-  } catch (error) {
-    console.error('Error fetching directions data:', error);
-    throw new ResponseError(500, 'Failed to fetch directions data');
-  }
 }
 
 const getTaxisWithinRadius = async (email) => {
