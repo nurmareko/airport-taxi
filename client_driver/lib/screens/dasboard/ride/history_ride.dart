@@ -1,8 +1,8 @@
-import 'package:airport_taxi_sharing_driver_client/blocs/ride/getHistoryRide/get_history_ride_bloc.dart';
-import 'package:airport_taxi_sharing_driver_client/components/loading_data_background.dart';
-import 'package:airport_taxi_sharing_driver_client/screens/dasboard/dasboard_template_screen.dart';
-import 'package:airport_taxi_sharing_driver_client/screens/dasboard/errorScreen/error_screen.dart';
-import 'package:airport_taxi_sharing_driver_client/screens/dasboard/ride/no_history_ride.dart';
+import 'package:client_driver/blocs/ride/getHistoryRide/get_history_ride_bloc.dart';
+import 'package:client_driver/components/loading_data_background.dart';
+import 'package:client_driver/screens/dasboard/dasboard_template_screen.dart';
+import 'package:client_driver/screens/dasboard/errorScreen/error_screen.dart';
+import 'package:client_driver/screens/dasboard/ride/no_history_ride.dart';
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';

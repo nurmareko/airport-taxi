@@ -1,4 +1,4 @@
-import 'package:airport_taxi_sharing_driver_client/theme/colors.dart';
+import 'package:client_driver/theme/colors.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

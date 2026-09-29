@@ -1,11 +1,11 @@
-import 'package:airport_taxi_sharing_driver_client/components/dasboard/app_bar_1.dart';
-import 'package:airport_taxi_sharing_driver_client/components/dasboard/app_bar_2.dart';
-import 'package:airport_taxi_sharing_driver_client/screens/dasboard/account/account_screen.dart';
-import 'package:airport_taxi_sharing_driver_client/screens/dasboard/beranda_screen.dart';
-import 'package:airport_taxi_sharing_driver_client/screens/dasboard/history/history_template.dart';
-import 'package:airport_taxi_sharing_driver_client/screens/dasboard/orderan/orderan_screen.dart';
-import 'package:airport_taxi_sharing_driver_client/screens/dasboard/ride/ride_screen.dart';
-import 'package:airport_taxi_sharing_driver_client/theme/colors.dart';
+import 'package:client_driver/components/dasboard/app_bar_1.dart';
+import 'package:client_driver/components/dasboard/app_bar_2.dart';
+import 'package:client_driver/screens/dasboard/account/account_screen.dart';
+import 'package:client_driver/screens/dasboard/beranda_screen.dart';
+import 'package:client_driver/screens/dasboard/history/history_template.dart';
+import 'package:client_driver/screens/dasboard/orderan/orderan_screen.dart';
+import 'package:client_driver/screens/dasboard/ride/ride_screen.dart';
+import 'package:client_driver/theme/colors.dart';
 import 'package:flutter/material.dart';
 
 class DasboardTemplate extends StatefulWidget {

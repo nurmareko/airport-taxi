@@ -1,5 +1,5 @@
-import 'package:airport_taxi_sharing_driver_client/data/dataSources/logout_api_data.dart';
-import 'package:airport_taxi_sharing_driver_client/error/new-exception.dart';
+import 'package:client_driver/data/dataSources/logout_api_data.dart';
+import 'package:client_driver/error/new-exception.dart';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';

@@ -1,10 +1,10 @@
-import 'package:airport_taxi_sharing_driver_client/blocs/driver/verificationEmailForgotPassword/verification_email_forgot_password_bloc.dart';
-import 'package:airport_taxi_sharing_driver_client/components/auth/app_bar.dart';
-import 'package:airport_taxi_sharing_driver_client/components/error_message.dart';
-import 'package:airport_taxi_sharing_driver_client/components/loading.dart';
-import 'package:airport_taxi_sharing_driver_client/data/models/request/resend_otp_email_forgot_password_request_model.dart';
-import 'package:airport_taxi_sharing_driver_client/data/models/request/verification_email_forgot_password_request_model.dart';
-import 'package:airport_taxi_sharing_driver_client/theme/colors.dart';
+import 'package:client_driver/blocs/driver/verificationEmailForgotPassword/verification_email_forgot_password_bloc.dart';
+import 'package:client_driver/components/auth/app_bar.dart';
+import 'package:client_driver/components/error_message.dart';
+import 'package:client_driver/components/loading.dart';
+import 'package:client_driver/data/models/request/resend_otp_email_forgot_password_request_model.dart';
+import 'package:client_driver/data/models/request/verification_email_forgot_password_request_model.dart';
+import 'package:client_driver/theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

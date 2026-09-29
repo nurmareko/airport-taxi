@@ -1,10 +1,10 @@
-import 'package:airport_taxi_sharing_driver_client/data/dataSources/resend_otp_email_forgot_password_api_data.dart';
-import 'package:airport_taxi_sharing_driver_client/data/dataSources/verification_email_forgot_password_api_data.dart';
-import 'package:airport_taxi_sharing_driver_client/data/models/request/resend_otp_email_forgot_password_request_model.dart';
-import 'package:airport_taxi_sharing_driver_client/data/models/request/verification_email_forgot_password_request_model.dart';
-import 'package:airport_taxi_sharing_driver_client/data/models/response/resend_otp_email_forgot_password_response_model.dart';
-import 'package:airport_taxi_sharing_driver_client/data/models/response/verification_email_forgot_password_response_model.dart';
-import 'package:airport_taxi_sharing_driver_client/error/new-exception.dart';
+import 'package:client_driver/data/dataSources/resend_otp_email_forgot_password_api_data.dart';
+import 'package:client_driver/data/dataSources/verification_email_forgot_password_api_data.dart';
+import 'package:client_driver/data/models/request/resend_otp_email_forgot_password_request_model.dart';
+import 'package:client_driver/data/models/request/verification_email_forgot_password_request_model.dart';
+import 'package:client_driver/data/models/response/resend_otp_email_forgot_password_response_model.dart';
+import 'package:client_driver/data/models/response/verification_email_forgot_password_response_model.dart';
+import 'package:client_driver/error/new-exception.dart';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';

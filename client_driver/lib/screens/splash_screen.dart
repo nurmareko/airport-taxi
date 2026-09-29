@@ -1,7 +1,7 @@
-import 'package:airport_taxi_sharing_driver_client/blocs/driver/checkAuthentication/check_authentication_bloc.dart';
-import 'package:airport_taxi_sharing_driver_client/theme/colors.dart';
-import 'package:airport_taxi_sharing_driver_client/utils/location_controller.dart';
-import 'package:airport_taxi_sharing_driver_client/utils/location_service.dart';
+import 'package:client_driver/blocs/driver/checkAuthentication/check_authentication_bloc.dart';
+import 'package:client_driver/theme/colors.dart';
+import 'package:client_driver/utils/location_controller.dart';
+import 'package:client_driver/utils/location_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

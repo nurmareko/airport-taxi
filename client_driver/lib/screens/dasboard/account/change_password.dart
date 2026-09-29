@@ -1,10 +1,10 @@
-import 'package:airport_taxi_sharing_driver_client/blocs/driver/changePassword/change_password_bloc.dart';
-import 'package:airport_taxi_sharing_driver_client/components/confirmation_bottom_sheet.dart';
-import 'package:airport_taxi_sharing_driver_client/components/error_message.dart';
-import 'package:airport_taxi_sharing_driver_client/components/loading.dart';
-import 'package:airport_taxi_sharing_driver_client/data/models/request/change_password_request_model.dart';
-import 'package:airport_taxi_sharing_driver_client/screens/dasboard/dasboard_template_screen.dart';
-import 'package:airport_taxi_sharing_driver_client/theme/colors.dart';
+import 'package:client_driver/blocs/driver/changePassword/change_password_bloc.dart';
+import 'package:client_driver/components/confirmation_bottom_sheet.dart';
+import 'package:client_driver/components/error_message.dart';
+import 'package:client_driver/components/loading.dart';
+import 'package:client_driver/data/models/request/change_password_request_model.dart';
+import 'package:client_driver/screens/dasboard/dasboard_template_screen.dart';
+import 'package:client_driver/theme/colors.dart';
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

@@ -1,8 +1,8 @@
-import 'package:airport_taxi_sharing_driver_client/data/dataSources/cancel_ride_api_data.dart';
-import 'package:airport_taxi_sharing_driver_client/data/models/request/cancel_ride_request_model.dart';
-import 'package:airport_taxi_sharing_driver_client/data/models/response/cancel_ride_response_model.dart';
+import 'package:client_driver/data/dataSources/cancel_ride_api_data.dart';
+import 'package:client_driver/data/models/request/cancel_ride_request_model.dart';
+import 'package:client_driver/data/models/response/cancel_ride_response_model.dart';
 
-import 'package:airport_taxi_sharing_driver_client/error/new-exception.dart';
+import 'package:client_driver/error/new-exception.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 

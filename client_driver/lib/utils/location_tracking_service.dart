@@ -1,7 +1,7 @@
-import 'package:airport_taxi_sharing_driver_client/blocs/driver/updateLocation/update_location_bloc.dart';
-import 'package:airport_taxi_sharing_driver_client/blocs/orderan/updateLocationOrderan/update_location_orderan_bloc.dart';
-import 'package:airport_taxi_sharing_driver_client/data/models/request/update_location_orderan_request_model.dart';
-import 'package:airport_taxi_sharing_driver_client/data/models/request/update_location_request_model.dart';
+import 'package:client_driver/blocs/driver/updateLocation/update_location_bloc.dart';
+import 'package:client_driver/blocs/orderan/updateLocationOrderan/update_location_orderan_bloc.dart';
+import 'package:client_driver/data/models/request/update_location_orderan_request_model.dart';
+import 'package:client_driver/data/models/request/update_location_request_model.dart';
 import 'package:geolocator/geolocator.dart';
 
 class LocationService {

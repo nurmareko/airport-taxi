@@ -1,4 +1,4 @@
-name: airport_taxi_sharing_driver_client
+name: client_driver
 description: A new Flutter project.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.

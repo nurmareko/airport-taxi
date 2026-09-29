@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:airport_taxi_sharing_driver_client/data/models/request/resend_otp_email_register_request_model.dart';
-import 'package:airport_taxi_sharing_driver_client/data/models/response/resend_otp_email_register_response_model_model.dart';
-import 'package:airport_taxi_sharing_driver_client/error/new-exception.dart';
+import 'package:client_driver/data/models/request/resend_otp_email_register_request_model.dart';
+import 'package:client_driver/data/models/response/resend_otp_email_register_response_model_model.dart';
+import 'package:client_driver/error/new-exception.dart';
 import 'package:http/http.dart' as http;
 
 class ResendOTPEmailRegisterAPIData {

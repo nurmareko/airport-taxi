@@ -1,9 +1,9 @@
-import 'package:airport_taxi_sharing_driver_client/blocs/driver/getDriver/get_driver_bloc.dart';
-import 'package:airport_taxi_sharing_driver_client/blocs/driver/logout/logout_bloc.dart';
-import 'package:airport_taxi_sharing_driver_client/components/confirmation_bottom_sheet.dart';
-import 'package:airport_taxi_sharing_driver_client/components/loading_data_background.dart';
-import 'package:airport_taxi_sharing_driver_client/screens/dasboard/account/change_password.dart';
-import 'package:airport_taxi_sharing_driver_client/screens/dasboard/account/edit_account_profile_screen.dart';
+import 'package:client_driver/blocs/driver/getDriver/get_driver_bloc.dart';
+import 'package:client_driver/blocs/driver/logout/logout_bloc.dart';
+import 'package:client_driver/components/confirmation_bottom_sheet.dart';
+import 'package:client_driver/components/loading_data_background.dart';
+import 'package:client_driver/screens/dasboard/account/change_password.dart';
+import 'package:client_driver/screens/dasboard/account/edit_account_profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

@@ -1,10 +1,10 @@
 import 'dart:convert';
 
-import 'package:airport_taxi_sharing_driver_client/data/dataSources/api_constant.dart';
-import 'package:airport_taxi_sharing_driver_client/data/models/request/update_status_orderan_request_model.dart';
-import 'package:airport_taxi_sharing_driver_client/data/models/response/update_status_orderan_response_model.dart';
-import 'package:airport_taxi_sharing_driver_client/error/new-exception.dart';
-import 'package:airport_taxi_sharing_driver_client/utils/secure_storage.dart';
+import 'package:client_driver/data/dataSources/api_constant.dart';
+import 'package:client_driver/data/models/request/update_status_orderan_request_model.dart';
+import 'package:client_driver/data/models/response/update_status_orderan_response_model.dart';
+import 'package:client_driver/error/new-exception.dart';
+import 'package:client_driver/utils/secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 class UpdateStatusOrderanAPIData {

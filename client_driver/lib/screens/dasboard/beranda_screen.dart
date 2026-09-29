@@ -1,24 +1,24 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:async';
-import 'package:airport_taxi_sharing_driver_client/blocs/driver/updateTokenDevice/update_device_token_bloc.dart';
-import 'package:airport_taxi_sharing_driver_client/blocs/orderan/getCurrentOrderan/get_current_orderan_bloc.dart';
-import 'package:airport_taxi_sharing_driver_client/blocs/ride/getCurrentRide/get_current_ride_bloc.dart';
-import 'package:airport_taxi_sharing_driver_client/data/models/request/update_device_token_request_model.dart';
-import 'package:airport_taxi_sharing_driver_client/screens/dasboard/errorScreen/error_screen.dart';
-import 'package:airport_taxi_sharing_driver_client/screens/dasboard/errorScreen/location_error_screen.dart';
-import 'package:airport_taxi_sharing_driver_client/utils/secure_storage.dart';
+import 'package:client_driver/blocs/driver/updateTokenDevice/update_device_token_bloc.dart';
+import 'package:client_driver/blocs/orderan/getCurrentOrderan/get_current_orderan_bloc.dart';
+import 'package:client_driver/blocs/ride/getCurrentRide/get_current_ride_bloc.dart';
+import 'package:client_driver/data/models/request/update_device_token_request_model.dart';
+import 'package:client_driver/screens/dasboard/errorScreen/error_screen.dart';
+import 'package:client_driver/screens/dasboard/errorScreen/location_error_screen.dart';
+import 'package:client_driver/utils/secure_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:geocoding/geocoding.dart' hide Location;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:airport_taxi_sharing_driver_client/blocs/driver/getDriver/get_driver_bloc.dart';
-import 'package:airport_taxi_sharing_driver_client/blocs/driver/updateLocation/update_location_bloc.dart';
-import 'package:airport_taxi_sharing_driver_client/components/loading_data_background.dart';
-import 'package:airport_taxi_sharing_driver_client/data/models/request/update_location_request_model.dart';
-import 'package:airport_taxi_sharing_driver_client/screens/dasboard/dasboard_template_screen.dart';
-import 'package:airport_taxi_sharing_driver_client/utils/location_controller.dart';
-import 'package:airport_taxi_sharing_driver_client/utils/location_service.dart';
+import 'package:client_driver/blocs/driver/getDriver/get_driver_bloc.dart';
+import 'package:client_driver/blocs/driver/updateLocation/update_location_bloc.dart';
+import 'package:client_driver/components/loading_data_background.dart';
+import 'package:client_driver/data/models/request/update_location_request_model.dart';
+import 'package:client_driver/screens/dasboard/dasboard_template_screen.dart';
+import 'package:client_driver/utils/location_controller.dart';
+import 'package:client_driver/utils/location_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:cached_network_image/cached_network_image.dart';

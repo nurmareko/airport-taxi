@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:ui' as ui;
 
-import 'package:airport_taxi_sharing_driver_client/screens/dasboard/dasboard_template_screen.dart';
+import 'package:client_driver/screens/dasboard/dasboard_template_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';

@@ -1,13 +1,13 @@
 import 'dart:io';
 
-import 'package:airport_taxi_sharing_driver_client/blocs/driver/getDriver/get_driver_bloc.dart';
-import 'package:airport_taxi_sharing_driver_client/blocs/driver/updateDriver/update_driver_bloc.dart';
-import 'package:airport_taxi_sharing_driver_client/components/confirmation_bottom_sheet.dart';
-import 'package:airport_taxi_sharing_driver_client/components/loading.dart';
-import 'package:airport_taxi_sharing_driver_client/components/loading_data_background.dart';
-import 'package:airport_taxi_sharing_driver_client/data/models/request/update_driver_request_model.dart';
-import 'package:airport_taxi_sharing_driver_client/screens/dasboard/dasboard_template_screen.dart';
-import 'package:airport_taxi_sharing_driver_client/theme/colors.dart';
+import 'package:client_driver/blocs/driver/getDriver/get_driver_bloc.dart';
+import 'package:client_driver/blocs/driver/updateDriver/update_driver_bloc.dart';
+import 'package:client_driver/components/confirmation_bottom_sheet.dart';
+import 'package:client_driver/components/loading.dart';
+import 'package:client_driver/components/loading_data_background.dart';
+import 'package:client_driver/data/models/request/update_driver_request_model.dart';
+import 'package:client_driver/screens/dasboard/dasboard_template_screen.dart';
+import 'package:client_driver/theme/colors.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

@@ -1,6 +1,6 @@
-import 'package:airport_taxi_sharing_driver_client/data/dataSources/check_authentication_api_data.dart';
-import 'package:airport_taxi_sharing_driver_client/data/models/response/check_authentication_response_model.dart';
-import 'package:airport_taxi_sharing_driver_client/error/new-exception.dart';
+import 'package:client_driver/data/dataSources/check_authentication_api_data.dart';
+import 'package:client_driver/data/models/response/check_authentication_response_model.dart';
+import 'package:client_driver/error/new-exception.dart';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';

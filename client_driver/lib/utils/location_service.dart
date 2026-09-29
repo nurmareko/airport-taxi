@@ -1,4 +1,4 @@
-import 'package:airport_taxi_sharing_driver_client/utils/location_controller.dart';
+import 'package:client_driver/utils/location_controller.dart';
 import 'package:flutter/services.dart'; // Import ini diperlukan untuk SystemNavigator
 import 'package:get/route_manager.dart';
 import 'package:location/location.dart';
