@@ -29,7 +29,7 @@ class GetDriverResponseModel {
       email: json["email"],
       name: json["name"],
       phoneNumber: json["phoneNumber"],
-      photo: json["photo"],
+      photo: json["photo"] ?? '',
       lat: json["lat"],
       long: json["long"],
     );
