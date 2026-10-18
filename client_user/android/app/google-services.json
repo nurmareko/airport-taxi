@@ -1,21 +1,40 @@
 {
   "project_info": {
-    "project_number": "926442896520",
-    "project_id": "airport-taxi-sharing-ce9e9",
-    "storage_bucket": "airport-taxi-sharing-ce9e9.appspot.com"
+    "project_number": "869344650729",
+    "project_id": "taxi-sharing-upgrade",
+    "storage_bucket": "taxi-sharing-upgrade.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:926442896520:android:d51aacd48d33994197f33d",
+        "mobilesdk_app_id": "1:869344650729:android:01052eedbf54dbf789d778",
         "android_client_info": {
-          "package_name": "com.example.airport_taxi_sharing_user_client"
+          "package_name": "id.gofly.taxidriver"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyADG6aIFYhEH98ok_knsa_nt1YyObTf97E"
+          "current_key": "AIzaSyDUkS0LL08Wj5pJSQ4IejF3cJgclqsUGCo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:869344650729:android:6fc6dbe97fb829b889d778",
+        "android_client_info": {
+          "package_name": "id.gofly.taxiuser"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDUkS0LL08Wj5pJSQ4IejF3cJgclqsUGCo"
         }
       ],
       "services": {
