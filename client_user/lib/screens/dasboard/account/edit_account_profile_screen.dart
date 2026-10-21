@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:client_user/screens/dasboard/dasboard_template_screen.dart';
 import 'package:client_user/theme/colors.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:client_user/components/profile_photo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -184,15 +184,7 @@ class _EditProfileState extends State<EditProfile> {
                                     borderRadius: BorderRadius.circular(100),
                                     child: _image != null
                                         ? Image.file(_image!, fit: BoxFit.cover)
-                                        : CachedNetworkImage(
-                                            imageUrl: photo ?? '',
-                                            placeholder: (context, url) =>
-                                                const CircularProgressIndicator(),
-                                            errorWidget:
-                                                (context, url, error) =>
-                                                    const Icon(Icons.error),
-                                            fit: BoxFit.cover,
-                                          ),
+                                        : ProfilePhoto(photo: photo),
                                   ),
                                 ),
                                 Positioned(

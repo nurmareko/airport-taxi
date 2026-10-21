@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:async';
+import 'package:client_user/components/profile_photo.dart';
 import 'dart:ui' as ui;
 import 'package:client_user/blocs/customer/updateTokenDevice/update_device_token_bloc.dart';
 import 'package:client_user/data/models/request/update_device_token_request_model.dart';
@@ -546,9 +547,12 @@ class _BerandaState extends State<Beranda> {
           const SizedBox(height: 10),
           Row(
             children: [
-              CircleAvatar(
-                radius: 40,
-                backgroundImage: NetworkImage(state.model.photo),
+              SizedBox(
+                width: 80,
+                height: 80,
+                child: ClipOval(
+                  child: ProfilePhoto(photo: state.model.photo),
+                ),
               ),
               const SizedBox(width: 20),
               Expanded(

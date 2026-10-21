@@ -7,7 +7,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:client_user/blocs/customer/getCustomer/get_customer_bloc.dart';
 import 'package:client_user/components/loading_data_background.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:client_user/components/profile_photo.dart';
 import 'package:client_user/screens/dasboard/account/edit_account_profile_screen.dart';
 import 'package:client_user/blocs/customer/logout/logout_bloc.dart';
 import 'package:get/get.dart';
@@ -38,13 +38,7 @@ class _AccountState extends State<Account> {
           child: ClipOval(
             child: AspectRatio(
               aspectRatio: 1.0,
-              child: CachedNetworkImage(
-                imageUrl: photo,
-                placeholder: (context, url) =>
-                    const CircularProgressIndicator(),
-                errorWidget: (context, url, error) => const Icon(Icons.error),
-                fit: BoxFit.cover,
-              ),
+              child: ProfilePhoto(photo: photo),
             ),
           ),
         );
@@ -135,14 +129,7 @@ class _AccountState extends State<Account> {
                 child: GestureDetector(
                   onTap: () => _showFullScreenImage(context, photo),
                   child: ClipOval(
-                    child: CachedNetworkImage(
-                      imageUrl: photo,
-                      placeholder: (context, url) =>
-                          const CircularProgressIndicator(),
-                      errorWidget: (context, url, error) =>
-                          const Icon(Icons.error),
-                      fit: BoxFit.cover,
-                    ),
+                    child: ProfilePhoto(photo: photo),
                   ),
                 ),
               ),

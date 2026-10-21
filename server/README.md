@@ -10,16 +10,20 @@ GOOGLE_MAPS_API_KEY=your-server-google-maps-api-key
 
 Restart the server after changing configuration. There is no hardcoded fallback.
 Use a valid server-side Google Cloud key with billing enabled and access to the
-**Directions API (Legacy)** (the existing `/maps/api/directions/json` endpoint)
-and **Geocoding API**. Enabling only Routes API does not enable this Directions
-endpoint. If your project cannot enable Directions API (Legacy), an eligible
-project/key or a separate migration to Routes API is needed.
+**Routes API** and **Geocoding API**. Route calculations use
+`POST https://routes.googleapis.com/directions/v2:computeRoutes` with driving,
+traffic-unaware routing and a field mask limited to distance and duration.
+Distances remain in metres and durations in seconds, so fare calculations and
+client response formats are unchanged. Directions API (Legacy) is no longer
+required by the server. Geocoding still uses the Geocoding API.
+Enable Routes API and update the key's API restrictions before restarting.
+Google Maps usage may incur charges; configure quotas and billing alerts.
 Restrict the key to the required APIs and the server's outbound public IP(s),
 not Android/iOS application IDs or browser HTTP referrers. Keep the key out of
 client applications and version control; `server/.env` is ignored by Git.
 Rotate/revoke the previously committed key in its owning Google Cloud project.
 
-Directions failures stop the operation; no estimated distances or fares are
+Routes API failures stop the operation; no estimated distances or fares are
 fabricated. Missing configuration returns 503 with setup instructions. Provider
 denial returns 502 with key/API/billing/restriction checks; quota errors return
 503, timeouts 504, and no route/location results 404. Invalid provider responses
